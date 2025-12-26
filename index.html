@@ -730,7 +730,42 @@
                 grid-template-columns: 1fr;
             }
         }
-       
+       /* Mobile-first responsive approach */
+.container.nav-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    gap: 1rem;
+}
+
+.logo-img {
+    height: 35px;
+}
+
+.nav-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+}
+
+/* Tablet and up */
+@media (min-width: 768px) {
+    .container.nav-container {
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 1rem 2rem;
+    }
+    
+    .logo-img {
+        height: 40px;
+    }
+    
+    .nav-links {
+        gap: 2rem;
+    }
+}
     </style>
 </head>
 <body>
@@ -1074,5 +1109,6 @@ document.addEventListener('DOMContentLoaded', loadTestimonials);
 </body>
 
 </html>
+
 
 
