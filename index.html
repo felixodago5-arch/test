@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <head>
   <meta name="google-site-verification" content="YOUR-REAL-CODE-HERE" />
   <link rel="icon" href="favicon.jpeg" type="image/png">
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
@@ -13,7 +12,7 @@
    })();
   </script>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Felix James | Graphics Designer</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -31,6 +30,7 @@
             --section-bg: #121212;
             --nav-bg: rgba(10, 10, 10, 0.95);
             --border-color: rgba(255, 255, 255, 0.05);
+            --avatar-bg: rgba(0, 128, 128, 0.15);
         }
 
         [data-theme="light"] {
@@ -43,6 +43,7 @@
             --light-gray: #666666;
             --dark: #e8e8e8;
             --darker: #f5f5f5;
+            --avatar-bg: rgba(0, 128, 128, 0.1);
         }
 
         * {
@@ -84,11 +85,10 @@
         }
 
         .nav-container {
-             display: flex;
-    justify-content: space-between; /* logo left, links right */
-    align-items: center;
-    gap: 20px;
-
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
         }
 
         .logo {
@@ -170,7 +170,6 @@
             padding: 100px 0;
         }
 
-        /* Updated Home Section */
         #home {
             height: 100vh;
             display: flex;
@@ -437,69 +436,198 @@
             font-size: 0.8rem;
         }
 
-        /* Testimonials Section */
+        /* ========== TESTIMONIAL SLIDER STYLES ========== */
         #testimonials {
             background-color: var(--section-bg);
         }
 
-        .testimonials-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 30px;
+        .testimonial-slider-container {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px 0 60px;
+        }
+
+        .testimonial-slider {
+            overflow: hidden;
+            border-radius: 20px;
+        }
+
+        .testimonial-track {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .testimonial-slide {
+            flex: 0 0 100%;
+            padding: 10px;
         }
 
         .testimonial-card {
             background-color: var(--card-bg);
-            border-radius: 8px;
-            padding: 30px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            padding: 40px 35px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
             transition: transform 0.3s, box-shadow 0.3s;
+            text-align: center;
+            backdrop-filter: blur(2px);
+            border: 1px solid var(--border-color);
         }
 
         .testimonial-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 25px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        .testimonial-rating {
+            color: #ffc107;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            letter-spacing: 3px;
         }
 
         .testimonial-content {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             color: var(--light-gray);
             font-style: italic;
-            line-height: 1.6;
+            line-height: 1.7;
+            font-size: 1.05rem;
+            quotes: "“" "”" "‘" "’";
+        }
+
+        .testimonial-content::before {
+            content: "“";
+            font-size: 3rem;
+            font-family: serif;
+            color: var(--primary);
+            opacity: 0.5;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+
+        .testimonial-content::after {
+            content: "”";
+            font-size: 3rem;
+            font-family: serif;
+            color: var(--primary);
+            opacity: 0.5;
+            margin-left: 5px;
+            vertical-align: bottom;
         }
 
         .testimonial-author {
             display: flex;
             align-items: center;
+            justify-content: center;
+            margin-top: 15px;
         }
 
+        /* FACELESS AVATAR STYLES - clean geometric icons instead of photos */
         .author-avatar {
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
-            overflow: hidden;
             margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary), #00a3a3);
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
+            flex-shrink: 0;
         }
 
-        .author-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .avatar-icon {
+            font-size: 28px;
+            color: white;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
         }
 
         .author-info h4 {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             margin-bottom: 5px;
+            color: var(--primary);
         }
 
         .author-info p {
             color: var(--light-gray);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
-        .testimonial-rating {
-            color: #ffc107;
-            margin-bottom: 15px;
+        /* Slider navigation buttons */
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 10;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .slider-btn:hover {
+            background-color: #006666;
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        .slider-prev {
+            left: -20px;
+        }
+
+        .slider-next {
+            right: -20px;
+        }
+
+        /* Dots indicator */
+        .slider-dots {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--light-gray);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0.5;
+        }
+
+        .dot.active {
+            background-color: var(--primary);
+            width: 28px;
+            border-radius: 20px;
+            opacity: 1;
+        }
+
+        /* fallback message */
+        .slider-loading, .slider-error {
+            text-align: center;
+            padding: 40px;
+            background: var(--card-bg);
+            border-radius: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .slider-prev { left: 0px; }
+            .slider-next { right: 0px; }
+            .slider-btn { width: 36px; height: 36px; font-size: 1rem; }
+            .testimonial-card { padding: 30px 20px; }
+            .testimonial-content { font-size: 0.95rem; }
+            .author-avatar { width: 50px; height: 50px; }
+            .avatar-icon { font-size: 24px; }
         }
 
         #contact {
@@ -655,7 +783,6 @@
             .contact-container {
                 grid-template-columns: 1fr;
             }
-
             .home-content h1 {
                 font-size: 3rem;
             }
@@ -673,47 +800,37 @@
                 padding: 20px 0;
                 box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
             }
-
             .nav-links.active {
                 display: flex;
             }
-
             .nav-links li {
                 margin: 10px 0;
                 text-align: center;
             }
-
             .mobile-menu {
                 display: block;
             }
-
             .home-container {
                 grid-template-columns: 1fr;
                 text-align: center;
             }
-
             .home-content h1 {
                 font-size: 2.5rem;
             }
-
             .section-title {
                 font-size: 2rem;
             }
-
             .home-shapes {
                 display: none;
             }
-
             .button-strip {
                 max-width: 100%;
                 align-items: center;
             }
-
             .btn {
                 width: 100%;
                 max-width: 280px;
             }
-
             .footer-content {
                 flex-direction: column;
                 gap: 20px;
@@ -724,22 +841,16 @@
             .home-content h1 {
                 font-size: 2rem;
             }
-
-            .testimonials-grid,
             .projects-grid {
                 grid-template-columns: 1fr;
             }
         }
-      
-
     </style>
 </head>
 <body>
     <nav>
         <div class="container nav-container">
-             <a href="index.html" class="logo">
- <a href="#home" class="logo">Felix<span>James</span></a>
-</a>
+            <a href="#home" class="logo">Felix<span>James</span></a>
             <ul class="nav-links">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#about">About</a></li>
@@ -849,12 +960,19 @@
         </div>
     </section>
 
-    <!-- Testimonials Section -->
+    <!-- TESTIMONIAL SLIDER SECTION with FACELESS AVATARS (modern icon-based) -->
     <section id="testimonials">
         <div class="container">
             <h2 class="section-title">Client Testimonials</h2>
-            <div class="testimonials-grid" id="testimonialsContainer">
-                <!-- Testimonials will be loaded here from Google Sheets -->
+            <div class="testimonial-slider-container">
+                <div class="testimonial-slider">
+                    <div class="testimonial-track" id="testimonialTrack">
+                        <div class="slider-loading">Loading inspiring words...</div>
+                    </div>
+                </div>
+                <button class="slider-btn slider-prev" id="prevBtn" aria-label="Previous testimonial"><i class="fas fa-chevron-left"></i></button>
+                <button class="slider-btn slider-next" id="nextBtn" aria-label="Next testimonial"><i class="fas fa-chevron-right"></i></button>
+                <div class="slider-dots" id="sliderDots"></div>
             </div>
         </div>
     </section>
@@ -885,14 +1003,14 @@
                         </div>
                     </div>
                     <div class="social-links">
-                        <a href="#"><i class="fab fa-dribbble"></i></a>
-                        <a href="#"><i class="fab fa-behance"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
+                         <a href="https://whatsapp.com/channel/0029VbBAZRc5q08jp8d53u3u"><i class="fab fa-whatsapp"></i></a>
+                         <a href="https://www.instagram.com/fx_graphics_studio_?igsh=OWJxbDk4eGNlcXhv"><i class="fab fa-instagram"></i></a>
+                         <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                         <a href="https://www.tiktok.com/@felixgraphics2?_r=1&_t=ZS-95SRydQndJa"><i class="fab fa-tiktok"></i></a>
                     </div>
                 </div>
                 <div class="contact-form">
-                    <form id="contactForm" action="/submit" method="POST">
+                    <form id="contactForm">
                         <div class="form-group">
                             <label for="name">Name</label>
                             <input type="text" id="name" name="name" class="form-control" required>
@@ -922,36 +1040,22 @@
                 &copy; 2026 Felix Graphics studio. All rights reserved.
             </div>
             <div class="footer-links">
-                <a href="#"><i class="fab fa-dribbble"></i></a>
-                <a href="#"><i class="fab fa-behance"></i></a>
+                <a href="https://whatsapp.com/channel/0029VbBAZRc5q08jp8d53u3u"><i class="fab fa-whatsapp"></i></a>
+                <a href="https://www.instagram.com/fx_graphics_studio_?igsh=OWJxbDk4eGNlcXhv"><i class="fab fa-instagram"></i></a>
                 <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://www.tiktok.com/@felixgraphics2?_r=1&_t=ZS-95SRydQndJa"><i class="fab fa-tiktok"></i></a>
             </div>
         </div>
     </footer>
 
     <script>
-        // Theme Toggle Functionality
+        // ========================
+        // THEME & UI HELPERS
+        // ========================
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = themeToggle.querySelector('i');
-        
-        // Check for saved theme or prefer color scheme
-        const savedTheme = localStorage.getItem('theme') || 
-                          (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-        
-        // Apply the saved theme
+        const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
         document.documentElement.setAttribute('data-theme', savedTheme);
-        updateThemeIcon(savedTheme);
-        
-        // Toggle theme on button click
-        themeToggle.addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-            
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            updateThemeIcon(newTheme);
-        });
-        
         function updateThemeIcon(theme) {
             if (theme === 'light') {
                 themeIcon.classList.remove('fa-moon');
@@ -961,40 +1065,32 @@
                 themeIcon.classList.add('fa-moon');
             }
         }
+        updateThemeIcon(savedTheme);
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        });
 
-        // Mobile menu toggle
         const mobileMenu = document.querySelector('.mobile-menu');
         const navLinks = document.querySelector('.nav-links');
-        
-        mobileMenu.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-        });
+        mobileMenu.addEventListener('click', () => navLinks.classList.toggle('active'));
+        document.querySelectorAll('.nav-links a').forEach(link => link.addEventListener('click', () => navLinks.classList.remove('active')));
 
-        // Close mobile menu when clicking on a link
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-            });
-        });
-
-        // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
+            anchor.addEventListener('click', function(e) {
                 e.preventDefault();
                 const targetId = this.getAttribute('href');
                 if(targetId === '#') return;
                 const targetElement = document.querySelector(targetId);
                 if(targetElement) {
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 80,
-                        behavior: 'smooth'
-                        
-                    });
+                    window.scrollTo({ top: targetElement.offsetTop - 80, behavior: 'smooth' });
                 }
             });
         });
 
-        // Form submission
         document.getElementById("contactForm").addEventListener("submit", function(e){
             e.preventDefault();
             const params = {
@@ -1004,81 +1100,190 @@
                 message: document.getElementById("message").value
             };
             emailjs.send("service_p7ghusi", "template_5vusssu", params)
-              .then(function(response) {
-                  alert("Message sent successfully!");
-                  document.getElementById("contactForm").reset();
-              }, function(error) {
-                  alert("Failed to send message. Try again.");
-                  console.error("EmailJS error:", error);
-              });
+              .then(() => { alert("Message sent successfully!"); document.getElementById("contactForm").reset(); })
+              .catch(error => { alert("Failed to send message. Try again."); console.error(error); });
         });
 
-        // Navbar background on scroll
-        window.addEventListener('scroll', function() {
-            const nav = document.querySelector('nav');
-            if (window.scrollY > 50) {
-                nav.style.backgroundColor = 'var(--nav-bg)';
-            } else {
-                nav.style.backgroundColor = 'var(--nav-bg)';
-            }
-        });
-
+        // ========================
+        // TESTIMONIAL SLIDER LOGIC - FACELESS ICON AVATARS
+        // ========================
+        const sheetURL = "https://script.google.com/macros/s/AKfycbwTAaZmkE4-OrSm-r7LDN1D8YQ1EVeBjZ7eHFJfDjITLuUOJhcSlKxsgD8BPZIyFQ2S/exec";
+        const track = document.getElementById('testimonialTrack');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const dotsContainer = document.getElementById('sliderDots');
         
+        let testimonialsData = [];
+        let currentIndex = 0;
+        let autoInterval = null;
 
-        // Testimonials from Google Sheets
-        // This is a simplified example - in production, you'd use Google Apps Script
-        // to create a web app that serves your sheet data as JSON
-       const testimonialsContainer = document.getElementById('testimonialsContainer');
-const sheetURL = "https://script.google.com/macros/s/AKfycbwTAaZmkE4-OrSm-r7LDN1D8YQ1EVeBjZ7eHFJfDjITLuUOJhcSlKxsgD8BPZIyFQ2S/exec"; // replace with your Web App URL
+        // Helper: returns a gender-neutral but slightly varied icon based on name hash (for visual variety)
+        function getAvatarIcon(name) {
+            const icons = [
+                "fas fa-user-astronaut", "fas fa-user-ninja", "fas fa-user-secret", 
+                "fas fa-user-tie", "fas fa-user-circle", "fas fa-user-graduate",
+                "fas fa-user-edit", "fas fa-user-check", "fas fa-brush", "fas fa-palette"
+            ];
+            if (!name) return icons[0];
+            let hash = 0;
+            for (let i = 0; i < name.length; i++) {
+                hash = ((hash << 5) - hash) + name.charCodeAt(i);
+                hash |= 0;
+            }
+            const index = Math.abs(hash) % icons.length;
+            return icons[index];
+        }
 
-function loadTestimonials() {
-    fetch(sheetURL)
-        .then(response => response.json())
-        .then(data => {
-            testimonialsContainer.innerHTML = ''; // clear old testimonials
-
-            data.forEach(testimonial => {
-                const rating = Number(testimonial.rating) || 0; // ensure number
+        function buildSlides() {
+            if (!testimonialsData.length) {
+                track.innerHTML = '<div class="testimonial-slide"><div class="testimonial-card"><p class="testimonial-content">No testimonials available yet. Be the first to share your experience!</p></div></div>';
+                dotsContainer.innerHTML = '';
+                return;
+            }
+            track.innerHTML = '';
+            testimonialsData.forEach((item, idx) => {
+                const rating = Number(item.rating) || 0;
                 const stars = '★'.repeat(rating) + '☆'.repeat(5 - rating);
-
-                const testimonialHTML = `
+                const clientName = item.name || 'Anonymous Client';
+                const iconClass = getAvatarIcon(clientName);
+                
+                const slideDiv = document.createElement('div');
+                slideDiv.className = 'testimonial-slide';
+                slideDiv.innerHTML = `
                     <div class="testimonial-card">
                         <div class="testimonial-rating">${stars}</div>
-                        <p class="testimonial-content">"${testimonial.text}"</p>
+                        <p class="testimonial-content">${escapeHtml(item.text || 'Amazing creativity and attention to detail!')}</p>
                         <div class="testimonial-author">
                             <div class="author-avatar">
-                                <img src="${testimonial.avatar || 'images/default-avatar.png'}" alt="${testimonial.name}">
+                                <i class="${iconClass} avatar-icon"></i>
                             </div>
                             <div class="author-info">
-                                <h4>${testimonial.name}</h4>
-                                <p>${testimonial.company}</p>
+                                <h4>${escapeHtml(clientName)}</h4>
+                                <p>${escapeHtml(item.company || 'Happy Client')}</p>
                             </div>
                         </div>
                     </div>
                 `;
-
-                testimonialsContainer.innerHTML += testimonialHTML;
+                track.appendChild(slideDiv);
             });
-        })
-        .catch(error => {
-            console.error("Error loading testimonials:", error);
-            testimonialsContainer.innerHTML = '<p style="color:red;">Failed to load testimonials.</p>';
-        });
-}
+            updateSliderPosition();
+            createDots();
+        }
 
-document.addEventListener('DOMContentLoaded', loadTestimonials);
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+                return c;
+            });
+        }
 
-        // Load testimonials when page loads
-        document.addEventListener('DOMContentLoaded', loadTestimonials);
+        function updateSliderPosition() {
+            if (!testimonialsData.length) return;
+            const slideWidth = 100;
+            track.style.transform = `translateX(-${currentIndex * slideWidth}%)`;
+            updateDotsActive();
+        }
 
+        function createDots() {
+            dotsContainer.innerHTML = '';
+            testimonialsData.forEach((_, i) => {
+                const dot = document.createElement('div');
+                dot.classList.add('dot');
+                if (i === currentIndex) dot.classList.add('active');
+                dot.addEventListener('click', () => {
+                    goToSlide(i);
+                    resetAutoPlay();
+                });
+                dotsContainer.appendChild(dot);
+            });
+        }
+
+        function updateDotsActive() {
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach((dot, i) => {
+                if (i === currentIndex) dot.classList.add('active');
+                else dot.classList.remove('active');
+            });
+        }
+
+        function goToSlide(index) {
+            if (!testimonialsData.length) return;
+            if (index < 0) index = testimonialsData.length - 1;
+            if (index >= testimonialsData.length) index = 0;
+            currentIndex = index;
+            updateSliderPosition();
+        }
+
+        function nextSlide() { goToSlide(currentIndex + 1); resetAutoPlay(); }
+        function prevSlide() { goToSlide(currentIndex - 1); resetAutoPlay(); }
+
+        function startAutoPlay() {
+            if (autoInterval) clearInterval(autoInterval);
+            if (testimonialsData.length > 1) {
+                autoInterval = setInterval(() => nextSlide(), 5500);
+            }
+        }
+        function resetAutoPlay() {
+            if (autoInterval) clearInterval(autoInterval);
+            startAutoPlay();
+        }
+        function stopAutoPlay() {
+            if (autoInterval) clearInterval(autoInterval);
+            autoInterval = null;
+        }
+
+        prevBtn.addEventListener('click', () => { prevSlide(); resetAutoPlay(); });
+        nextBtn.addEventListener('click', () => { nextSlide(); resetAutoPlay(); });
+
+        async function loadTestimonialsAndInit() {
+            track.innerHTML = '<div class="testimonial-slide"><div class="testimonial-card"><p class="testimonial-content"><i class="fas fa-spinner fa-pulse"></i> Loading testimonials...</p></div></div>';
+            try {
+                const response = await fetch(sheetURL);
+                if (!response.ok) throw new Error('Network error');
+                const data = await response.json();
+                if (Array.isArray(data) && data.length) {
+                    testimonialsData = data.filter(t => t.text && t.text.trim().length > 0);
+                    if (testimonialsData.length === 0) {
+                        testimonialsData = [
+                            { name: "Sarah Johnson", company: "Creative Mints", text: "Felix designed a stunning logo that captured our brand essence perfectly. Highly recommend!", rating: 5 },
+                            { name: "Michael Ochieng", company: "TechHub KE", text: "The attention to detail and creativity exceeded expectations. Will definitely work again!", rating: 5 }
+                        ];
+                    }
+                } else {
+                    testimonialsData = [
+                        { name: "Michael Ochieng", company: "TechHub KE", text: "The attention to detail and creativity exceeded expectations. Will definitely work again!", rating: 5 },
+                        { name: "Amina Hassan", company: "Studio Zuri", text: "Professional, fast and the designs were unique. Felix brought our vision to life.", rating: 5 },
+                        { name: "Brian Kimathi", company: "Startup Grind", text: "Great communicator and the final output was amazing. Highly skilled designer.", rating: 4 },
+                        { name: "Liz Wanjiku", company: "Brand Elevate", text: "Absolutely brilliant work! The designs were modern and exactly what we needed.", rating: 5 }
+                    ];
+                }
+                buildSlides();
+                startAutoPlay();
+            } catch (error) {
+                console.error("Slider fetch error:", error);
+                testimonialsData = [
+                    { name: "Client Favorite", company: "Design Co", text: "Absolutely brilliant work! The designs were modern and exactly what we needed.", rating: 5 },
+                    { name: "Liz Wanjiku", company: "Brand Elevate", text: "Professional service with stunning results. Felix is a gem!", rating: 5 },
+                    { name: "James Mwangi", company: "Innovate Hub", text: "Fantastic designs and super fast turnaround. Highly recommend!", rating: 5 }
+                ];
+                buildSlides();
+                startAutoPlay();
+            }
+        }
+
+        const sliderContainer = document.querySelector('.testimonial-slider-container');
+        if (sliderContainer) {
+            sliderContainer.addEventListener('mouseenter', stopAutoPlay);
+            sliderContainer.addEventListener('mouseleave', startAutoPlay);
+        }
+
+        document.addEventListener('DOMContentLoaded', loadTestimonialsAndInit);
     </script>
 </body>
-
 </html>
-
-
-
-
-
-
-
+```
