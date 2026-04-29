@@ -1,16 +1,41 @@
- // THEME TOGGLE
+
+// THEME TOGGLE
         const themeToggleBtn = document.getElementById('themeToggle');
-        const themeIconSpan = themeToggleBtn.querySelector('i');
+        const themeIconSpan = themeToggleBtn ? themeToggleBtn.querySelector('i') : null;
         const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
         document.documentElement.setAttribute('data-theme', savedTheme);
-        function updateThemeIcon(theme) { themeIconSpan.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon'; }
+        function updateThemeIcon(theme) { 
+            if (themeIconSpan) themeIconSpan.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon'; 
+        }
         updateThemeIcon(savedTheme);
-        themeToggleBtn.addEventListener('click', () => {
+        themeToggleBtn?.addEventListener('click', () => {
             const current = document.documentElement.getAttribute('data-theme');
             const newTheme = current === 'light' ? 'dark' : 'light';
             document.documentElement.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
             updateThemeIcon(newTheme);
+        });
+
+        // ARC THEME TOGGLE
+        const arcThemeBtn = document.getElementById('arcThemeBtn');
+        const arcThemeIcon = document.getElementById('arcThemeIcon');
+
+        function updateArcThemeIcon(theme) {
+            if (arcThemeIcon) arcThemeIcon.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        updateArcThemeIcon(savedTheme);
+
+        arcThemeBtn?.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const current = document.documentElement.getAttribute('data-theme');
+            const newTheme = current === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+            updateArcThemeIcon(newTheme);
+            if (arcOpen) toggleArc(e);
         });
 
         // PRICING MODAL
@@ -34,18 +59,15 @@
         arcPricingBtn?.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            // Close arc first then open modal
             if (arcOpen) toggleArc(e);
             setTimeout(openPricing, 150);
         });
         pricingClose?.addEventListener('click', closePricing);
 
-        // Close on backdrop click (outside modal)
         pricingBackdrop?.addEventListener('click', (e) => {
             if (e.target === pricingBackdrop) closePricing();
         });
 
-        // Close on Escape key
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && pricingBackdrop.classList.contains('open')) closePricing();
         });
@@ -56,7 +78,6 @@
         const logoPreview     = document.getElementById('logoPreview');
         const logoPlaceholder = document.getElementById('logoPlaceholder');
 
-        // Load saved logo from localStorage if exists
         const savedLogo = localStorage.getItem('studioLogo');
         if (savedLogo) {
             logoPreview.src = savedLogo;
@@ -157,7 +178,6 @@
         const ARC_RADIUS = 92;
         const arcItemEls = document.querySelectorAll('.arc-item');
 
-        // FIX 1: Corner-aware arc — fans AWAY from the nearest corner
         function getArcAngles() {
             const rect = arcFab.getBoundingClientRect();
             const cx = rect.left + rect.width / 2;
@@ -166,10 +186,10 @@
             const vh = window.innerHeight;
             const onRight  = cx > vw / 2;
             const onBottom = cy > vh / 2;
-            if (onBottom && onRight)  return { start: -180, end: -90  }; // bottom-right → fan up-left
-            if (onBottom && !onRight) return { start: -90,  end: 0    }; // bottom-left  → fan up-right
-            if (!onBottom && onRight) return { start: 90,   end: 180  }; // top-right    → fan down-left
-            return                           { start: 0,    end: 90   }; // top-left     → fan down-right
+            if (onBottom && onRight)  return { start: -180, end: -90  };
+            if (onBottom && !onRight) return { start: -90,  end: 0    };
+            if (!onBottom && onRight) return { start: 90,   end: 180  };
+            return                           { start: 0,    end: 90   };
         }
 
         function positionArcItems() {
@@ -188,7 +208,7 @@
         }
 
         function updateArcTransforms() {
-            positionArcItems(); // Recalculate direction each time (FAB may have moved)
+            positionArcItems();
         }
 
         function toggleArc(e) {
@@ -204,7 +224,6 @@
             updateArcTransforms();
         }
 
-        // Arc item click — scroll then close
         arcItemEls.forEach(item => {
             item.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -218,7 +237,6 @@
             });
         });
 
-        // Close arc when clicking outside — use pointerdown to avoid conflict with drag
         document.addEventListener('pointerdown', (e) => {
             if (arcOpen && !arcFab.contains(e.target)) {
                 arcOpen = false;
@@ -228,7 +246,6 @@
             }
         });
 
-        // FIX 2: Tap vs drag — only toggle if finger/mouse didn't move more than 8px
         let dragActive = false, dragMoved = false;
         let dragStartX, dragStartY, dragStartLeft, dragStartTop;
 
@@ -268,7 +285,6 @@
             const clientY = e.clientY ?? e.touches?.[0].clientY ?? 0;
             const dx = Math.abs(clientX - dragStartX);
             const dy = Math.abs(clientY - dragStartY);
-            // Only treat as real drag after moving 8px
             if (dx > 8 || dy > 8) {
                 dragMoved = true;
                 e.preventDefault();
@@ -286,31 +302,25 @@
             if (!dragActive) return;
             dragActive = false;
             if (!dragMoved) {
-                // It was a tap/click — toggle the arc
                 toggleArc(e);
                 return;
             }
-            // It was a real drag — snap to nearest corner
             const rect = arcFab.getBoundingClientRect();
             const vw = window.innerWidth, vh = window.innerHeight;
             const w  = arcFab.offsetWidth,  h = arcFab.offsetHeight;
             const snapped = snapToEdges(rect.left, rect.top, vw, vh, w, h);
             setArcPos(snapped.left, snapped.top);
-            // Re-aim arc after snap if open
             if (arcOpen) updateArcTransforms();
         }
 
-        // Mouse events
         arcMainBtn.addEventListener('mousedown', onDragStart);
         window.addEventListener('mousemove', onDragMove);
         window.addEventListener('mouseup', onDragEnd);
 
-        // Touch events
         arcMainBtn.addEventListener('touchstart', onDragStart, { passive: false });
         window.addEventListener('touchmove', onDragMove, { passive: false });
         window.addEventListener('touchend', onDragEnd);
 
-        // Reposition on resize
         window.addEventListener('resize', () => {
             const rect = arcFab.getBoundingClientRect();
             const vw = window.innerWidth, vh = window.innerHeight;
@@ -320,18 +330,11 @@
             positionArcItems();
         });
 
-        // Init
         positionArcItems();
 
         // ========== PINTEREST GALLERY ==========
-        // designs.json structure:
-        // [{ id, title, category, year, description, tools:[], image, icon }]
-        // image: path like "designs/project1.jpg" — swap placeholders when ready
-        // icon: FontAwesome class like "fa-pen-nib" used when no image
-
         let DESIGNS = [];
 
-        // Load designs from JSON
         fetch('designs.json')
             .then(response => response.json())
             .then(data => {
@@ -424,7 +427,6 @@
                 closeExpand();
             });
 
-            // Related thumb clicks
             row.querySelectorAll('.pin-related-thumb').forEach(thumb => {
                 thumb.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -444,40 +446,27 @@
         }
 
         function toggleExpand(d) {
-            // Clicking the already-open card closes it
             if (activeExpandId === d.id) { closeExpand(); return; }
-
             closeExpand();
             activeExpandId = d.id;
-
-            // Find the clicked pin element
             const clickedPin = pinGrid.querySelector(`.pin-item[data-id="${d.id}"]`);
             if (!clickedPin) return;
-
             const expandRow = buildExpandRow(d);
-
-            // Insert after clicked pin
             clickedPin.after(expandRow);
-
-            // Smooth scroll so expand panel is visible
             setTimeout(() => {
                 expandRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }, 80);
         }
 
         function renderGallery() {
-            // Remove expand panel first
             closeExpand();
-
             const filtered = getFiltered();
             pinGrid.innerHTML = '';
-
             if (filtered.length === 0) {
                 pinGrid.innerHTML = '<div class="pin-empty"><i class="fas fa-search"></i><p>No projects in this category yet.</p></div>';
                 galleryCount.textContent = '0 projects';
                 return;
             }
-
             filtered.forEach((d, i) => {
                 const pin = buildPin(d);
                 pin.style.opacity = '0';
@@ -487,7 +476,6 @@
                     pin.classList.add('fade-in');
                 }, i * 40);
             });
-
             galleryCount.textContent = `${filtered.length} project${filtered.length !== 1 ? 's' : ''}`;
         }
 
@@ -503,11 +491,9 @@
         // ========== TOOLS BAR ANIMATION ==========
         const toolCards = document.querySelectorAll('.tool-card[data-pct]');
 
-        // Set all bars to 0 width initially so CSS transition works
         toolCards.forEach(card => {
             const fill = card.querySelector('.tool-bar-fill');
             if (fill) fill.style.width = '0%';
-            // Also fade cards in from below
             card.style.opacity = '0';
             card.style.transform = 'translateY(20px)';
             card.style.transition = 'opacity 0.4s ease, transform 0.4s ease, box-shadow 0.3s';
@@ -519,24 +505,21 @@
                     const card  = entry.target;
                     const pct   = card.getAttribute('data-pct');
                     const fill  = card.querySelector('.tool-bar-fill');
-                    // Get index among siblings for stagger
                     const siblings = Array.from(card.parentElement.querySelectorAll('.tool-card'));
                     const idx = siblings.indexOf(card);
                     const delay = idx * 100;
-
                     setTimeout(() => {
-                        // Fade card in
                         card.style.opacity = '1';
                         card.style.transform = 'translateY(0)';
-                        // Animate bar after card appears
                         setTimeout(() => {
                             if (fill) fill.style.width = pct + '%';
                         }, 200);
                     }, delay);
-
                     barObserver.unobserve(card);
                 }
             });
         }, { threshold: 0.15 });
 
         toolCards.forEach(card => barObserver.observe(card));
+
+
