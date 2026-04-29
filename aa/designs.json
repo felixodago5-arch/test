@@ -1,0 +1,145 @@
+[
+  {
+    "id": 1,
+    "title": "Brand Identity – Startup",
+    "category": "branding",
+    "year": "2025",
+    "description": "Full brand package including logo, colour palette and brand guidelines for a Nairobi startup.",
+    "tools": ["CorelDRAW", "Illustrator"],
+    "image": "designs/flyer.jpg",
+    "icon": "fa-briefcase",
+    "height": 240
+  },
+  {
+    "id": 2,
+    "title": "Event Poster – Music Night",
+    "category": "poster",
+    "year": "2025",
+    "description": "Bold typographic poster for a live music event. Print-ready at A2 size.",
+    "tools": ["CorelDRAW", "Photoshop"],
+    "image": "designs/chair.png",
+    "icon": "fa-image",
+    "height": 300
+  },
+  {
+    "id": 3,
+    "title": "Instagram Campaign",
+    "category": "social",
+    "year": "2025",
+    "description": "9-post grid campaign for a fashion brand launch, maintaining consistent visual language.",
+    "tools": ["Illustrator", "Affinity"],
+    "image": "designs/two desings in a mockup.jpg",
+    "icon": "fa-mobile-alt",
+    "height": 200
+  },
+  {
+    "id": 4,
+    "title": "Event Poster –football Match",
+    "category": "poster",
+    "year": "2024",
+    "description": "Bold typographic poster for a football match. Print-ready at A4 size.",
+    "tools": ["CorelDRAW", "Photoshop"],
+    "image": "designs/Document.football.png",
+    "icon": "fa-pen-nib",
+    "height": 260
+  },
+  {
+    "id": 5,
+    "title": "Product Label – Beverage",
+    "category": "print",
+    "year": "2024",
+    "description": "Label design for a Kenyan juice brand — ZURI FRESH. Print-ready with bleed and crop marks.",
+    "tools": ["CorelDRAW"],
+    "image": "designs/project5.jpg",
+    "icon": "fa-print",
+    "height": 220
+  },
+  {
+    "id": 6,
+    "title": "Landing Page – Agency",
+    "category": "ui",
+    "year": "2024",
+    "description": "UI design mockup for a creative agency homepage.",
+    "tools": ["Affinity"],
+    "image": "designs/project6.jpg",
+    "icon": "fa-desktop",
+    "height": 280
+  },
+  {
+    "id": 7,
+    "title": "Stationery Pack",
+    "category": "branding",
+    "year": "2024",
+    "description": "Letterhead, envelope and business card suite for a law firm — all print-ready.",
+    "tools": ["CorelDRAW", "Illustrator"],
+    "image": "designs/INVOICE.png",
+    "icon": "fa-id-card",
+    "height": 200
+  },
+  {
+    "id": 8,
+    "title": "media design",
+    "category": "poster",
+    "year": "2024",
+    "description": "media design for a traveling blog.",
+    "tools": ["CorelDRAW", "Photoshop"],
+    "image": "designs/M1.png",
+    "icon": "fa-newspaper",
+    "height": 320
+  },
+  {
+    "id": 9,
+    "title": "Digital Safety Infographic",
+    "category": "social",
+    "year": "2024",
+    "description": "Awareness infographic on online safety best practices, designed for social sharing.",
+    "tools": ["Illustrator", "Affinity"],
+    "image": "designs/project9.jpg",
+    "icon": "fa-shield-alt",
+    "height": 250
+  },
+  {
+    "id": 10,
+    "title": "Business Card – Realtor",
+    "category": "branding",
+    "year": "2025",
+    "description": "Double-sided business card, designed for a real estate agent.",
+    "tools": ["CorelDRAW"],
+    "image": "designs/business cards.jpg",
+    "icon": "fa-address-card",
+    "height": 180
+  },
+   {
+    "id": 10,
+    "title": "Business Card – Realtor",
+    "category": "branding",
+    "year": "2025",
+    "description": "Double-sided business card with QR code, designed for a real estate agent.",
+    "tools": ["CorelDRAW"],
+    "image": "designs/m2.png",
+    "icon": "fa-address-card",
+    "height": 180
+  },
+  {
+    "id": 11,
+    "title": "YouTube Thumbnail",
+    "category": "social",
+    "year": "2025",
+    "description": "Tech tutorial thumbnail designed for high click-through rate with bold contrast.",
+    "tools": ["Photoshop", "Illustrator"],
+    "image": "designs/project11.jpg",
+    "icon": "fa-play-circle",
+    "height": 210
+  },
+  {
+    "id": 12,
+    "title": "Flyer – Restaurant",
+    "category": "poster",
+    "year": "2025",
+    "description": "Vibrant promotional flyer for a local restaurant weekend special offer.",
+    "tools": ["CorelDRAW"],
+    "image": "designs/promotional flyer.jpg",
+    "icon": "fa-utensils",
+    "height": 290
+  }
+]
