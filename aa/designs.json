@@ -6,7 +6,7 @@
     "year": "2025",
     "description": "Full brand package including logo, colour palette and brand guidelines for a Nairobi startup.",
     "tools": ["CorelDRAW", "Illustrator"],
-    "image": "designs/flyer.jpg",
+    "image": "aa/designs/flyer.jpg",
     "icon": "fa-briefcase",
     "height": 240
   },
@@ -17,7 +17,7 @@
     "year": "2025",
     "description": "Bold typographic poster for a live music event. Print-ready at A2 size.",
     "tools": ["CorelDRAW", "Photoshop"],
-    "image": "designs/chair.png",
+    "image": "aa/designs/chair.png",
     "icon": "fa-image",
     "height": 300
   },
