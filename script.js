@@ -1,17 +1,13 @@
- // THEME TOGGLE
-        const themeToggleBtn = document.getElementById('themeToggle');
-        const themeIconSpan = themeToggleBtn.querySelector('i');
-        const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-        document.documentElement.setAttribute('data-theme', savedTheme);
-        function updateThemeIcon(theme) { themeIconSpan.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon'; }
-        updateThemeIcon(savedTheme);
-        themeToggleBtn.addEventListener('click', () => {
-            const current = document.documentElement.getAttribute('data-theme');
-            const newTheme = current === 'light' ? 'dark' : 'light';
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            updateThemeIcon(newTheme);
-        });
+
+// THEME TOGGLE
+      // THEME — follows system preference
+const savedTheme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+document.documentElement.setAttribute('data-theme', savedTheme);
+
+// Listen for system theme changes in real time
+window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', e => {
+    document.documentElement.setAttribute('data-theme', e.matches ? 'light' : 'dark');
+});
 
         // PRICING MODAL
         const pricingBackdrop = document.getElementById('pricingBackdrop');
@@ -34,18 +30,15 @@
         arcPricingBtn?.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            // Close arc first then open modal
             if (arcOpen) toggleArc(e);
             setTimeout(openPricing, 150);
         });
         pricingClose?.addEventListener('click', closePricing);
 
-        // Close on backdrop click (outside modal)
         pricingBackdrop?.addEventListener('click', (e) => {
             if (e.target === pricingBackdrop) closePricing();
         });
 
-        // Close on Escape key
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && pricingBackdrop.classList.contains('open')) closePricing();
         });
@@ -56,7 +49,6 @@
         const logoPreview     = document.getElementById('logoPreview');
         const logoPlaceholder = document.getElementById('logoPlaceholder');
 
-        // Load saved logo from localStorage if exists
         const savedLogo = localStorage.getItem('studioLogo');
         if (savedLogo) {
             logoPreview.src = savedLogo;
@@ -157,7 +149,6 @@
         const ARC_RADIUS = 92;
         const arcItemEls = document.querySelectorAll('.arc-item');
 
-        // FIX 1: Corner-aware arc — fans AWAY from the nearest corner
         function getArcAngles() {
             const rect = arcFab.getBoundingClientRect();
             const cx = rect.left + rect.width / 2;
@@ -166,10 +157,10 @@
             const vh = window.innerHeight;
             const onRight  = cx > vw / 2;
             const onBottom = cy > vh / 2;
-            if (onBottom && onRight)  return { start: -180, end: -90  }; // bottom-right → fan up-left
-            if (onBottom && !onRight) return { start: -90,  end: 0    }; // bottom-left  → fan up-right
-            if (!onBottom && onRight) return { start: 90,   end: 180  }; // top-right    → fan down-left
-            return                           { start: 0,    end: 90   }; // top-left     → fan down-right
+            if (onBottom && onRight)  return { start: -180, end: -90  };
+            if (onBottom && !onRight) return { start: -90,  end: 0    };
+            if (!onBottom && onRight) return { start: 90,   end: 180  };
+            return                           { start: 0,    end: 90   };
         }
 
         function positionArcItems() {
@@ -188,7 +179,7 @@
         }
 
         function updateArcTransforms() {
-            positionArcItems(); // Recalculate direction each time (FAB may have moved)
+            positionArcItems();
         }
 
         function toggleArc(e) {
@@ -204,7 +195,6 @@
             updateArcTransforms();
         }
 
-        // Arc item click — scroll then close
         arcItemEls.forEach(item => {
             item.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -218,7 +208,6 @@
             });
         });
 
-        // Close arc when clicking outside — use pointerdown to avoid conflict with drag
         document.addEventListener('pointerdown', (e) => {
             if (arcOpen && !arcFab.contains(e.target)) {
                 arcOpen = false;
@@ -228,7 +217,6 @@
             }
         });
 
-        // FIX 2: Tap vs drag — only toggle if finger/mouse didn't move more than 8px
         let dragActive = false, dragMoved = false;
         let dragStartX, dragStartY, dragStartLeft, dragStartTop;
 
@@ -268,7 +256,6 @@
             const clientY = e.clientY ?? e.touches?.[0].clientY ?? 0;
             const dx = Math.abs(clientX - dragStartX);
             const dy = Math.abs(clientY - dragStartY);
-            // Only treat as real drag after moving 8px
             if (dx > 8 || dy > 8) {
                 dragMoved = true;
                 e.preventDefault();
@@ -286,31 +273,25 @@
             if (!dragActive) return;
             dragActive = false;
             if (!dragMoved) {
-                // It was a tap/click — toggle the arc
                 toggleArc(e);
                 return;
             }
-            // It was a real drag — snap to nearest corner
             const rect = arcFab.getBoundingClientRect();
             const vw = window.innerWidth, vh = window.innerHeight;
             const w  = arcFab.offsetWidth,  h = arcFab.offsetHeight;
             const snapped = snapToEdges(rect.left, rect.top, vw, vh, w, h);
             setArcPos(snapped.left, snapped.top);
-            // Re-aim arc after snap if open
             if (arcOpen) updateArcTransforms();
         }
 
-        // Mouse events
         arcMainBtn.addEventListener('mousedown', onDragStart);
         window.addEventListener('mousemove', onDragMove);
         window.addEventListener('mouseup', onDragEnd);
 
-        // Touch events
         arcMainBtn.addEventListener('touchstart', onDragStart, { passive: false });
         window.addEventListener('touchmove', onDragMove, { passive: false });
         window.addEventListener('touchend', onDragEnd);
 
-        // Reposition on resize
         window.addEventListener('resize', () => {
             const rect = arcFab.getBoundingClientRect();
             const vw = window.innerWidth, vh = window.innerHeight;
@@ -320,18 +301,11 @@
             positionArcItems();
         });
 
-        // Init
         positionArcItems();
 
         // ========== PINTEREST GALLERY ==========
-        // designs.json structure:
-        // [{ id, title, category, year, description, tools:[], image, icon }]
-        // image: path like "designs/project1.jpg" — swap placeholders when ready
-        // icon: FontAwesome class like "fa-pen-nib" used when no image
-
         let DESIGNS = [];
 
-        // Load designs from JSON
         fetch('designs.json')
             .then(response => response.json())
             .then(data => {
@@ -424,7 +398,6 @@
                 closeExpand();
             });
 
-            // Related thumb clicks
             row.querySelectorAll('.pin-related-thumb').forEach(thumb => {
                 thumb.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -444,41 +417,28 @@
         }
 
         function toggleExpand(d) {
-            // Clicking the already-open card closes it
             if (activeExpandId === d.id) { closeExpand(); return; }
-
             closeExpand();
             activeExpandId = d.id;
-
-            // Find the clicked pin element
             const clickedPin = pinGrid.querySelector(`.pin-item[data-id="${d.id}"]`);
             if (!clickedPin) return;
-
             const expandRow = buildExpandRow(d);
-
-            // Insert after clicked pin
             clickedPin.after(expandRow);
-
-            // Smooth scroll so expand panel is visible
             setTimeout(() => {
                 expandRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }, 80);
         }
 
         function renderGallery() {
-            // Remove expand panel first
             closeExpand();
-
             const filtered = getFiltered();
             pinGrid.innerHTML = '';
-
             if (filtered.length === 0) {
                 pinGrid.innerHTML = '<div class="pin-empty"><i class="fas fa-search"></i><p>No projects in this category yet.</p></div>';
                 galleryCount.textContent = '0 projects';
                 return;
             }
-
-            filtered.forEach((d, i) => {
+           filtered.slice(0, 6).forEach((d, i) => {
                 const pin = buildPin(d);
                 pin.style.opacity = '0';
                 pinGrid.appendChild(pin);
@@ -487,7 +447,6 @@
                     pin.classList.add('fade-in');
                 }, i * 40);
             });
-
             galleryCount.textContent = `${filtered.length} project${filtered.length !== 1 ? 's' : ''}`;
         }
 
@@ -503,11 +462,9 @@
         // ========== TOOLS BAR ANIMATION ==========
         const toolCards = document.querySelectorAll('.tool-card[data-pct]');
 
-        // Set all bars to 0 width initially so CSS transition works
         toolCards.forEach(card => {
             const fill = card.querySelector('.tool-bar-fill');
             if (fill) fill.style.width = '0%';
-            // Also fade cards in from below
             card.style.opacity = '0';
             card.style.transform = 'translateY(20px)';
             card.style.transition = 'opacity 0.4s ease, transform 0.4s ease, box-shadow 0.3s';
@@ -519,24 +476,242 @@
                     const card  = entry.target;
                     const pct   = card.getAttribute('data-pct');
                     const fill  = card.querySelector('.tool-bar-fill');
-                    // Get index among siblings for stagger
                     const siblings = Array.from(card.parentElement.querySelectorAll('.tool-card'));
                     const idx = siblings.indexOf(card);
                     const delay = idx * 100;
-
                     setTimeout(() => {
-                        // Fade card in
                         card.style.opacity = '1';
                         card.style.transform = 'translateY(0)';
-                        // Animate bar after card appears
                         setTimeout(() => {
                             if (fill) fill.style.width = pct + '%';
                         }, 200);
                     }, delay);
-
                     barObserver.unobserve(card);
                 }
             });
         }, { threshold: 0.15 });
 
         toolCards.forEach(card => barObserver.observe(card));
+
+// ========== 3 PAGE STRUCTURE ==========
+const galleryView = document.getElementById('galleryView');
+const searchView  = document.getElementById('searchView');
+const galleryBack = document.getElementById('galleryBack');
+const searchBack  = document.getElementById('searchBack');
+const openSearch  = document.getElementById('openSearch');
+const arcGalleryBtn = document.getElementById('arcGalleryBtn');
+const searchInput   = document.getElementById('searchInput');
+const searchClear   = document.getElementById('searchClear');
+const searchSuggestions = document.getElementById('searchSuggestions');
+const galleryPinGrid    = document.getElementById('galleryPinGrid');
+const loadMoreBtn       = document.getElementById('loadMoreBtn');
+const loadMoreWrap      = document.getElementById('loadMoreWrap');
+
+const PAGE_SIZE = 8;
+let galleryFilter  = 'all';
+let galleryPage    = 0;
+let galleryExpand  = null;
+
+// Open / close views
+function openView(view) {
+    view.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeView(view) {
+    view.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Arc gallery button
+arcGalleryBtn?.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (arcOpen) toggleArc(e);
+    setTimeout(() => {
+        openView(galleryView);
+        renderGalleryView();
+    }, 150);
+});
+
+// Back buttons
+galleryBack?.addEventListener('click', () => closeView(galleryView));
+searchBack?.addEventListener('click', () => {
+    closeView(searchView);
+    searchInput.value = '';
+    searchClear.classList.remove('visible');
+    renderSuggestions('');
+});
+
+// Open search from gallery
+openSearch?.addEventListener('click', () => {
+    openView(searchView);
+    setTimeout(() => searchInput.focus(), 300);
+    renderSuggestions('');
+});
+
+// ── Gallery View rendering ──
+function getGalleryFiltered() {
+    return galleryFilter === 'all'
+        ? DESIGNS
+        : DESIGNS.filter(d => d.category === galleryFilter);
+}
+
+function renderGalleryView() {
+    galleryPage = 0;
+    galleryExpand = null;
+    galleryPinGrid.innerHTML = '';
+    loadMoreWrap.style.display = 'flex';
+    renderGalleryPage();
+}
+
+function renderGalleryPage() {
+    const filtered = getGalleryFiltered();
+    const start = galleryPage * PAGE_SIZE;
+    const slice = filtered.slice(start, start + PAGE_SIZE);
+
+    slice.forEach((d, i) => {
+        const pin = buildGalleryPin(d);
+        pin.style.opacity = '0';
+        galleryPinGrid.appendChild(pin);
+        setTimeout(() => {
+            pin.style.opacity = '1';
+            pin.classList.add('fade-in');
+        }, i * 40);
+    });
+
+    galleryPage++;
+
+    // Hide load more if no more designs
+    if (galleryPage * PAGE_SIZE >= filtered.length) {
+        loadMoreWrap.style.display = 'none';
+    }
+}
+
+function buildGalleryPin(d) {
+    const item = document.createElement('div');
+    item.className = 'pin-item';
+    item.dataset.id = d.id;
+
+    const imgHtml = d.image
+        ? `<img class="pin-img" src="${d.image}" alt="${d.title}" style="height:${d.height}px;">`
+        : `<div class="pin-placeholder" style="height:${d.height}px;"><i class="fas ${d.icon}"></i></div>`;
+
+    item.innerHTML = `
+        ${imgHtml}
+        <div class="pin-overlay">
+            <div class="pin-overlay-title">${d.title}</div>
+            <div class="pin-overlay-tag">${d.category}</div>
+        </div>`;
+
+    item.addEventListener('click', () => toggleGalleryExpand(d));
+    return item;
+}
+
+function toggleGalleryExpand(d) {
+    // Remove existing expand
+    const existing = galleryPinGrid.querySelector('.pin-expand-row');
+    if (existing) existing.remove();
+
+    if (galleryExpand === d.id) {
+        galleryExpand = null;
+        return;
+    }
+
+    galleryExpand = d.id;
+    const clickedPin = galleryPinGrid.querySelector(`.pin-item[data-id="${d.id}"]`);
+    if (!clickedPin) return;
+
+    const expandRow = buildExpandRow(d);
+    clickedPin.after(expandRow);
+    setTimeout(() => {
+        expandRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 80);
+}
+
+// Load more button
+loadMoreBtn?.addEventListener('click', renderGalleryPage);
+
+// Gallery filter buttons
+document.querySelectorAll('.gallery-filter-bar .filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.gallery-filter-bar .filter-btn')
+            .forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        galleryFilter = btn.dataset.filter;
+        renderGalleryView();
+    });
+});
+
+// ── Search View ──
+searchInput?.addEventListener('input', () => {
+    const val = searchInput.value.trim();
+    searchClear.classList.toggle('visible', val.length > 0);
+    renderSuggestions(val);
+});
+
+searchClear?.addEventListener('click', () => {
+    searchInput.value = '';
+    searchClear.classList.remove('visible');
+    renderSuggestions('');
+    searchInput.focus();
+});
+
+function renderSuggestions(query) {
+    const q = query.toLowerCase();
+    const results = q.length === 0
+        ? DESIGNS.slice(0, 12)
+        : DESIGNS.filter(d =>
+            d.title.toLowerCase().includes(q) ||
+            d.category.toLowerCase().includes(q) ||
+            (d.description && d.description.toLowerCase().includes(q)) ||
+            (d.tools && d.tools.some(t => t.toLowerCase().includes(q)))
+        );
+
+    if (results.length === 0) {
+        searchSuggestions.innerHTML = `
+            <div class="search-empty">
+                <i class="fas fa-search"></i>
+                <p>No designs found for "${query}"</p>
+            </div>`;
+        return;
+    }
+
+    searchSuggestions.innerHTML = results.map(d => `
+        <div class="suggestion-item" data-id="${d.id}">
+            <div class="suggestion-thumb">
+                ${d.image
+                    ? `<img src="${d.image}" alt="${d.title}">`
+                    : `<i class="fas ${d.icon}"></i>`}
+            </div>
+            <div class="suggestion-info">
+                <div class="suggestion-title">${d.title}</div>
+                <div class="suggestion-category">${d.category}</div>
+            </div>
+        </div>
+    `).join('');
+
+    // Tap suggestion — go back to gallery focused on that design
+    searchSuggestions.querySelectorAll('.suggestion-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const id = parseInt(item.dataset.id);
+            const design = DESIGNS.find(d => d.id === id);
+            if (!design) return;
+            closeView(searchView);
+            searchInput.value = '';
+            searchClear.classList.remove('visible');
+            // Reset gallery and open expand for selected design
+            galleryFilter = design.category;
+            document.querySelectorAll('.gallery-filter-bar .filter-btn').forEach(b => {
+                b.classList.toggle('active', b.dataset.filter === design.category);
+            });
+            renderGalleryView();
+            setTimeout(() => toggleGalleryExpand(design), 400);
+        });
+    });
+}
+document.getElementById('viewAllBtn')?.addEventListener('click', () => {
+    openView(galleryView);
+    renderGalleryView();
+});
+

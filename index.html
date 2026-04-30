@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta name="google-site-verification" content="YOUR-REAL-CODE-HERE" />
-  <link rel="icon" href="favicon.jpeg" type="image/png">
+  <link rel="icon" href="icon-192.png" type="image/png">
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script type="text/javascript">
    (function(){
@@ -17,14 +17,23 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <style>
-       
-    </style>
+
+    <link rel="manifest" href="manifest.json">
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/service-worker.js');
+    });
+  }
+</script>
+
+
+
 </head>
 <body>
     <nav>
         <div class="container nav-container">
-            <a href="#home" class="logo">Felix<span>James</span></a>
+            <a href="#home" class="logo"><img src="icon-192.png" alt="icon-192.png" width="40"></a>
             <ul class="nav-links">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#about">About</a></li>
@@ -34,9 +43,9 @@
                 <li><a href="#contact">Contact</a></li>
                 <li><a href="#" class="nav-pricing-btn" id="navPricingBtn"><i class="fas fa-tag"></i> Pricing</a></li>
             </ul>
-            <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
+            
         </div>
-        <div class="update-banner">
+        
   
 </div>
     </nav>
@@ -49,6 +58,9 @@
                 <div class="button-strip">
                     <a href="#projects" class="btn">View My Work</a>
                     <a href="#contact" class="btn btn-outline">Get In Touch</a>
+                    <button class="btn btn-outline" id="viewToolsBtn" style="max-width:280px; margin-top:10px;">
+                               <i class="fas fa-tools"></i> View My Tools
+                    </button>
                 </div>
             </div>
             <div class="home-visual">
@@ -66,9 +78,10 @@
             <h2 class="section-title">About Me</h2>
             <div class="about-content">
                 <div class="about-text">
-                    <h3>Designing with Purpose</h3>
-                    <p>"I'm a self-taught graphic designer who enjoys creating simple, meaningful designs. I'm currently improving my skills and exploring web design to expand my creativity."</p>
-                    <p>I believe that good design should be functional, accessible, and memorable. Whether I'm creating a brand identity or designing a user interface, or developing marketing materials, I focus on creating solutions that connect with audiences and communicate clearly.</p>
+                  <h3>Designing with Purpose</h3>
+                  <p>I’m a creative designer focused on building clean, impactful visual experiences. From graphic design to interactive web interfaces, I’m constantly refining my skills and exploring new ways to bring ideas to life.</p>
+
+                <p>I believe great design should be clear, functional, and engaging. Whether creating brand visuals, digital content, or responsive web experiences, my goal is to craft work that communicates effectively and leaves a lasting impression.</p>
                     <div class="skills">
                         <span class="skill">Brand Identity</span>
                         <span class="skill">Digital Illustration</span>
@@ -83,7 +96,141 @@
         </div>
     </section>
 
-    <!-- ===== TOOLS & SOFTWARE SECTION ===== -->
+   
+
+   <!--<section id="projects">
+        <div class="container">
+            <h2 class="section-title">My Projects</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-image"><img src="pic3.png" alt="Project 1"></div>
+                    <div class="project-info">
+                        <h3>Professional Business Card</h3>
+                        <p>Professional Business Card Design aligned with your brand identity</p>
+                        <div class="project-tags"><span class="project-tag">Branding</span><span class="project-tag">Logo Design</span></div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image"><img src="pic1.png" alt="Project 2"></div>
+                    <div class="project-info">
+                        <h3>Poster & Flyer</h3>
+                        <p>High-impact Flyer & Poster Design crafted for clarity and visual appeal</p>
+                        <div class="project-tags"><span class="project-tag">Poster</span><span class="project-tag">Flyer</span></div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image"><img src="pic0.jpg" alt="Project 3"></div>
+                    <div class="project-info">
+                        <h3>Social Media Graphics</h3>
+                        <p>Graphics for social media campaigns with brand consistency</p>
+                        <div class="project-tags"><span class="project-tag">Motion Graphics</span><span class="project-tag">Animation</span></div>
+                    </div>
+                </div>
+            </div>--> 
+
+            <!-- ===== PINTEREST GALLERY ===== -->
+            <div class="gallery-section">
+                <div class="gallery-header">
+                    <h3 class="gallery-title">My Designs</h3>
+                    <span class="gallery-count" id="galleryCount">0 projects</span>
+                </div>
+                
+                <!-- Pin grid — rendered by JS from designs.json -->
+                <div class="pin-grid" id="pinGrid"></div>
+                <div class="view-all-wrap">
+   <div style="display:flex; justify-content:center; margin-top:24px;">
+    <button class="load-more-btn" id="viewAllBtn">View All Designs</button>
+</div>
+            </div>
+            
+            <!-- ===== END PINTEREST GALLERY ===== -->
+
+        </div>
+    </section>
+
+    <section id="testimonials">
+        <div class="container">
+            <h2 class="section-title">Client Testimonials</h2>
+            <div class="testimonial-slider-container">
+                <div class="testimonial-slider">
+                    <div class="testimonial-track" id="testimonialTrack"><div class="slider-loading">Loading...</div></div>
+                </div>
+                <button class="slider-btn slider-prev" id="prevBtn"><i class="fas fa-chevron-left"></i></button>
+                <button class="slider-btn slider-next" id="nextBtn"><i class="fas fa-chevron-right"></i></button>
+                <div class="slider-dots" id="sliderDots"></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="container">
+            <h2 class="section-title">Get In Touch</h2>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <h3>Let's Work Together</h3>
+                    <p>Have a project in mind? Send me a message and let's create something amazing.</p>
+                    <div class="contact-details">
+                        <div class="contact-item"><i class="fas fa-envelope"></i><span>jamesodago6@gmail.com</span></div>
+                        <div class="contact-item"><i class="fas fa-map-marker-alt"></i><span>Nairobi, Kenya</span></div>
+                        <div class="contact-item"><i class="fab fa-whatsapp"></i><span><a href="https://wa.me/254106723905" target="_blank" style="color:inherit;">Chat on WhatsApp</a></span></div>
+                    </div>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <form id="contactForm">
+                        <div class="form-group"><label for="name">Name</label><input type="text" id="name" class="form-control" required></div>
+                        <div class="form-group"><label for="email">Email</label><input type="email" id="email" class="form-control" required></div>
+                        <div class="form-group"><label for="subject">Subject</label><input type="text" id="subject" class="form-control" required></div>
+                        <div class="form-group"><label for="message">Message</label><textarea id="message" class="form-control" required></textarea></div>
+                        <button type="submit" class="btn">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="copyright">&copy; 2026 Felix Graphics Studio. All rights reserved.</div>
+                       <div class="footer-links">
+                <a href=" https://whatsapp.com/channel/0029VbBAZRc5q08jp8d53u3u"><i class="fab fa-whatsapp"></i></a>
+                <a href="https://www.instagram.com/fx_graphics_studio_?igsh=OWJxbDk4eGNlcXhv"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://www.tiktok.com/@felixgraphics2?_r=1&_t=ZS-95yEOsHAU2J"><i class="fab fa-tiktok"></i></a>
+                <a href="https://www.facebook.com/share/18Z12Bi5uR/"><i class="fab fa-facebook"></i></a>
+                <a href="https://x.com/OdagoFelix92394"><i class="fab fa-twitter"></i></a>
+            </div>
+
+    </footer>
+           
+    </footer>
+
+    <!-- FLOATING ARC MENU -->
+    <div class="floating-arc" id="arcFab">
+        <div class="arc-main" id="arcMainBtn"><i class="fas fa-plus" id="arcIcon"></i></div>
+        <div class="arc-items">
+            <a href="#home" class="arc-item"><i class="fas fa-home"></i></a>
+            <a href="#about" class="arc-item"><i class="fas fa-user"></i></a>
+            <a href="#testimonials" class="arc-item"><i class="fas fa-comment-dots"></i></a>
+            <a href="#contact" class="arc-item"><i class="fas fa-envelope"></i></a>
+            <a href="#" class="arc-item" id="arcPricingBtn"><i class="fas fa-tag"></i></a>
+            <a href="#" class="arc-item" id="arcGalleryBtn"><i class="fas fa-images"></i></a>
+        </div>
+    </div>
+
+    <!-- ===== TOOLS VIEW ===== -->
+<div class="app-view" id="toolsView">
+    <div class="view-header">
+        <button class="view-back" id="toolsBack"><i class="fas fa-arrow-left"></i></button>
+        <h2 class="view-title">Tools & Software</h2>
+    </div>
+    <div class="view-body">
+          <!-- ===== TOOLS & SOFTWARE SECTION ===== -->
     <section id="tools">
         <div class="container">
             <h2 class="section-title">Tools & Software</h2>
@@ -277,133 +424,8 @@
     </section>
     <!-- ===== END TOOLS SECTION ===== -->
 
-   <!--<section id="projects">
-        <div class="container">
-            <h2 class="section-title">My Projects</h2>
-            <div class="projects-grid">
-                <div class="project-card">
-                    <div class="project-image"><img src="pic3.png" alt="Project 1"></div>
-                    <div class="project-info">
-                        <h3>Professional Business Card</h3>
-                        <p>Professional Business Card Design aligned with your brand identity</p>
-                        <div class="project-tags"><span class="project-tag">Branding</span><span class="project-tag">Logo Design</span></div>
-                    </div>
-                </div>
-                <div class="project-card">
-                    <div class="project-image"><img src="pic1.png" alt="Project 2"></div>
-                    <div class="project-info">
-                        <h3>Poster & Flyer</h3>
-                        <p>High-impact Flyer & Poster Design crafted for clarity and visual appeal</p>
-                        <div class="project-tags"><span class="project-tag">Poster</span><span class="project-tag">Flyer</span></div>
-                    </div>
-                </div>
-                <div class="project-card">
-                    <div class="project-image"><img src="pic0.jpg" alt="Project 3"></div>
-                    <div class="project-info">
-                        <h3>Social Media Graphics</h3>
-                        <p>Graphics for social media campaigns with brand consistency</p>
-                        <div class="project-tags"><span class="project-tag">Motion Graphics</span><span class="project-tag">Animation</span></div>
-                    </div>
-                </div>
-            </div>--> 
-
-            <!-- ===== PINTEREST GALLERY ===== -->
-            <div class="gallery-section">
-                <div class="gallery-header">
-                    <h3 class="gallery-title">More Work</h3>
-                    <span class="gallery-count" id="galleryCount">0 projects</span>
-                </div>
-                <div class="filter-bar">
-                    <span class="filter-label">Filter:</span>
-                    <button class="filter-btn active" data-filter="all">All</button>
-                    <button class="filter-btn" data-filter="branding">Branding</button>
-                    <button class="filter-btn" data-filter="poster">Poster</button>
-                    <button class="filter-btn" data-filter="social">Social Media</button>
-                    <button class="filter-btn" data-filter="logo">Logo</button>
-                    <button class="filter-btn" data-filter="print">Print</button>
-                    <button class="filter-btn" data-filter="ui">UI Design</button>
-                </div>
-                <!-- Pin grid — rendered by JS from designs.json -->
-                <div class="pin-grid" id="pinGrid"></div>
-            </div>
-            <!-- ===== END PINTEREST GALLERY ===== -->
-
-        </div>
-    </section>
-
-    <section id="testimonials">
-        <div class="container">
-            <h2 class="section-title">Client Testimonials</h2>
-            <div class="testimonial-slider-container">
-                <div class="testimonial-slider">
-                    <div class="testimonial-track" id="testimonialTrack"><div class="slider-loading">Loading...</div></div>
-                </div>
-                <button class="slider-btn slider-prev" id="prevBtn"><i class="fas fa-chevron-left"></i></button>
-                <button class="slider-btn slider-next" id="nextBtn"><i class="fas fa-chevron-right"></i></button>
-                <div class="slider-dots" id="sliderDots"></div>
-            </div>
-        </div>
-    </section>
-
-    <section id="contact">
-        <div class="container">
-            <h2 class="section-title">Get In Touch</h2>
-            <div class="contact-container">
-                <div class="contact-info">
-                    <h3>Let's Work Together</h3>
-                    <p>Have a project in mind? Send me a message and let's create something amazing.</p>
-                    <div class="contact-details">
-                        <div class="contact-item"><i class="fas fa-envelope"></i><span>jamesodago6@gmail.com</span></div>
-                        <div class="contact-item"><i class="fas fa-map-marker-alt"></i><span>Nairobi, Kenya</span></div>
-                        <div class="contact-item"><i class="fab fa-whatsapp"></i><span><a href="https://wa.me/254106723905" target="_blank" style="color:inherit;">Chat on WhatsApp</a></span></div>
-                    </div>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-whatsapp"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="#"><i class="fab fa-tiktok"></i></a>
-                    </div>
-                </div>
-                <div class="contact-form">
-                    <form id="contactForm">
-                        <div class="form-group"><label for="name">Name</label><input type="text" id="name" class="form-control" required></div>
-                        <div class="form-group"><label for="email">Email</label><input type="email" id="email" class="form-control" required></div>
-                        <div class="form-group"><label for="subject">Subject</label><input type="text" id="subject" class="form-control" required></div>
-                        <div class="form-group"><label for="message">Message</label><textarea id="message" class="form-control" required></textarea></div>
-                        <button type="submit" class="btn">Send Message</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer>
-        <div class="container footer-content">
-            <div class="copyright">&copy; 2026 Felix Graphics Studio. All rights reserved.</div>
-            <div class="footer-links">
-                <a href="#"><i class="fab fa-whatsapp"></i></a>
-                <a href="#"><i class="fab fa-instagram"></i></a>
-                <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                <a href="#"><i class="fab fa-tiktok"></i></a>
-                <a href="#"><i class="fab fa-facebook"></i></a>
-                <a href="#"><i class="fab fa-twitter"></i></a>
-            </div>
-            
-        </div>
-    </footer>
-
-    <!-- FLOATING ARC MENU -->
-    <div class="floating-arc" id="arcFab">
-        <div class="arc-main" id="arcMainBtn"><i class="fas fa-plus" id="arcIcon"></i></div>
-        <div class="arc-items">
-            <a href="#home" class="arc-item"><i class="fas fa-home"></i></a>
-            <a href="#about" class="arc-item"><i class="fas fa-user"></i></a>
-            <a href="#projects" class="arc-item"><i class="fas fa-layer-group"></i></a>
-            <a href="#testimonials" class="arc-item"><i class="fas fa-comment-dots"></i></a>
-            <a href="#contact" class="arc-item"><i class="fas fa-envelope"></i></a>
-            <a href="#" class="arc-item" id="arcPricingBtn"><i class="fas fa-tag"></i></a>
-        </div>
     </div>
+</div>
 
     <!-- ===== PRICING MODAL ===== -->
     <div class="pricing-backdrop" id="pricingBackdrop">
@@ -412,18 +434,12 @@
             <button class="pricing-close" id="pricingClose"><i class="fas fa-times"></i></button>
 
             <div class="pricing-modal-header">
-                <!-- Logo slot — click to upload your logo -->
-                <div class="pricing-logo-slot" id="logoSlot" title="Click to upload your studio logo">
-                    <img id="logoPreview" src="" alt="Studio Logo">
-                    <div class="logo-placeholder" id="logoPlaceholder">
-                        <i class="fas fa-image"></i>
-                        <span>Add Logo</span>
-                    </div>
-                </div>
-                <input type="file" id="logoUploadInput" accept="image/*">
+    <div class="pricing-logo-slot">
+        <img src="icon-192.png" alt="Felix James Studio Logo" style="width:100%; height:100%; object-fit:contain; display:block;">
+    </div>
 
                 <h2>Felix<span>James</span> Pricing</h2>
-                <p>Simple, honest pricing. No hidden fees — what you see is what you pay.</p>
+                <p>Simple, honest pricing. No hidden fees what you see is what you pay.</p>
             </div>
 
             <div class="pricing-cards">
@@ -486,6 +502,56 @@
         </div>
     </div>
     <!-- ===== END PRICING MODAL ===== -->
+
+    <!-- ===== GALLERY VIEW (Page 2) ===== -->
+<div class="app-view" id="galleryView">
+    <div class="view-header">
+        <button class="view-back" id="galleryBack"><i class="fas fa-arrow-left"></i></button>
+        <h2 class="view-title">Designs</h2>
+        <button class="view-search-btn" id="openSearch"><i class="fas fa-search"></i></button>
+    </div>
+    <div class="view-body">
+        <div class="filter-bar gallery-filter-bar">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="branding">Branding</button>
+            <button class="filter-btn" data-filter="poster">Poster</button>
+            <button class="filter-btn" data-filter="social">Social Media</button>
+            <button class="filter-btn" data-filter="logo">Logo</button>
+            <button class="filter-btn" data-filter="print">Print</button>
+            <button class="filter-btn" data-filter="ui">UI Design</button>
+        </div>
+        <div class="pin-grid" id="galleryPinGrid"></div>
+        <div class="load-more-wrap" id="loadMoreWrap">
+            <button class="load-more-btn" id="loadMoreBtn">Load More</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== SEARCH VIEW (Page 3) ===== -->
+<div class="app-view" id="searchView">
+    <div class="view-header">
+        <button class="view-back" id="searchBack"><i class="fas fa-arrow-left"></i></button>
+        <div class="search-input-wrap">
+            <i class="fas fa-search search-input-icon"></i>
+            <input type="text" id="searchInput" class="search-input" placeholder="Search designs...">
+            <button class="search-clear" id="searchClear"><i class="fas fa-times"></i></button>
+        </div>
+    </div>
+    <div class="view-body">
+        <div class="search-suggestions" id="searchSuggestions"></div>
+    </div>
+</div>
+
+<!-- ===== TOOLS VIEW ===== -->
+<div class="app-view" id="toolsView">
+    <div class="view-header">
+        <button class="view-back" id="toolsBack"><i class="fas fa-arrow-left"></i></button>
+        <h2 class="view-title">Tools & Software</h2>
+    </div>
+    <div class="view-body">
+        <!-- paste your entire tools section content here (everything inside the tools section div) -->
+    </div>
+</div>
 
     <script src="script.js"></script>
 </body>
