@@ -43,34 +43,6 @@ window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', e 
             if (e.key === 'Escape' && pricingBackdrop.classList.contains('open')) closePricing();
         });
 
-        // LOGO UPLOAD
-        const logoSlot        = document.getElementById('logoSlot');
-        const logoUploadInput = document.getElementById('logoUploadInput');
-        const logoPreview     = document.getElementById('logoPreview');
-        const logoPlaceholder = document.getElementById('logoPlaceholder');
-
-        const savedLogo = localStorage.getItem('studioLogo');
-        if (savedLogo) {
-            logoPreview.src = savedLogo;
-            logoPreview.style.display = 'block';
-            logoPlaceholder.style.display = 'none';
-        }
-
-        logoSlot?.addEventListener('click', () => logoUploadInput.click());
-
-        logoUploadInput?.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (ev) => {
-                const dataUrl = ev.target.result;
-                logoPreview.src = dataUrl;
-                logoPreview.style.display = 'block';
-                logoPlaceholder.style.display = 'none';
-                localStorage.setItem('studioLogo', dataUrl);
-            };
-            reader.readAsDataURL(file);
-        });
 
         // SMOOTH SCROLL
         document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
