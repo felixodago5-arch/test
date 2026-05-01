@@ -13,6 +13,12 @@
       "severity": "med",
       "desc": "The Projects section currently shows a limited selection of work due to layout constraints.",
       "workaround": "Reach out via the Contact section and I'll send you a direct link to the full portfolio."
+    },
+{
+      "title": "some cards are empty",
+      "severity": "med",
+      "desc": "The Projects section currently shows some empty cards am currently working on that.",
+      "workaround": "You can use the social media links below to check other latest designs that are not here."
     }
   ]
 }
