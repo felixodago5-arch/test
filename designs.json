@@ -152,5 +152,16 @@
     "image": "designs/chicks2.png",
     "icon": "fa-utensils",
     "height": 290
+  },
+   {
+    "id":14,
+    "title": "media design",
+    "category": "poster",
+    "year": "2024",
+    "description": "media design for a grocery store.",
+    "tools": ["CorelDRAW", "Photoshop"],
+    "image": "pic1.png",
+    "icon": "fa-newspaper",
+    "height": 320
   }
 ]
