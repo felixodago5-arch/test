@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Site Status – FelixJames</title>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: Georgia, serif;
+    background: #f0f0ee;
+    min-height: 100vh;
+    padding: 40px 20px 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ── BACK LINK ── */
+  .back-link {
+    align-self: flex-start;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.83rem;
+    color: #1a9e8f;
+    text-decoration: none;
+    margin-bottom: 28px;
+    transition: opacity 0.2s;
+  }
+  .back-link:hover { opacity: 0.7; }
+
+  /* ── WRAPPER ── */
+  .status-section {
+    width: 100%;
+    max-width: 560px;
+  }
+
+  .status-section h2 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #111;
+    margin-bottom: 4px;
+    letter-spacing: -0.5px;
+  }
+
+  .subtitle {
+    font-size: 0.88rem;
+    color: #888;
+    margin-bottom: 24px;
+    font-style: italic;
+  }
+
+  /* ── OVERALL STATUS BADGE ── */
+  .overall-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #fff;
+    border: 1px solid #e4e4e4;
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+
+  .pulse-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .pulse-dot::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    animation: pulse 1.8s ease-out infinite;
+  }
+  .dot-ok   { background: #22c55e; }
+  .dot-ok::after   { background: rgba(34,197,94,0.3); }
+  .dot-warn { background: #f59e0b; }
+  .dot-warn::after { background: rgba(245,158,11,0.3); }
+  .dot-down { background: #ef4444; }
+  .dot-down::after { background: rgba(239,68,68,0.3); }
+
+  @keyframes pulse {
+    0%  { transform: scale(1);   opacity: 0.8; }
+    70% { transform: scale(2.2); opacity: 0;   }
+    100%{ transform: scale(1);   opacity: 0;   }
+  }
+
+  .overall-label { font-size: 0.9rem; font-weight: 700; color: #111; }
+  .overall-label span { font-weight: 400; color: #777; margin-left: 6px; }
+  .last-updated { margin-left: auto; font-size: 0.75rem; color: #aaa; white-space: nowrap; }
+
+  /* ── ISSUE CARDS ── */
+  .issues-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+
+  .issue-card {
+    background: #fff;
+    border: 1px solid #e4e4e4;
+    border-left: 4px solid transparent;
+    border-radius: 12px;
+    padding: 16px 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    transition: box-shadow 0.2s;
+  }
+  .issue-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+
+  .issue-card.high  { border-left-color: #ef4444; }
+  .issue-card.med   { border-left-color: #f59e0b; }
+  .issue-card.low   { border-left-color: #1a9e8f; }
+  .issue-card.fixed { border-left-color: #22c55e; }
+
+  .issue-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .issue-title { font-size: 0.93rem; font-weight: 700; color: #111; }
+
+  .badge {
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 20px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .badge.high  { background: #fef2f2; color: #ef4444; }
+  .badge.med   { background: #fffbeb; color: #d97706; }
+  .badge.low   { background: #f0faf9; color: #1a9e8f; }
+  .badge.fixed { background: #f0fdf4; color: #16a34a; }
+
+  .issue-desc { font-size: 0.85rem; color: #666; line-height: 1.55; margin-bottom: 10px; }
+
+  .workaround {
+    background: #f8f8f7;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 0.82rem;
+    color: #444;
+    line-height: 1.5;
+  }
+  .workaround strong {
+    display: block;
+    color: #1a9e8f;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+  }
+
+  /* empty state */
+  .no-issues {
+    text-align: center;
+    padding: 32px;
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #e4e4e4;
+    color: #888;
+    font-size: 0.9rem;
+    margin-bottom: 32px;
+  }
+  .no-issues span { font-size: 1.8rem; display: block; margin-bottom: 8px; }
+
+  /* ── DIVIDER ── */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .divider hr { flex: 1; border: none; border-top: 1px solid #ddd; }
+  .divider span { font-size: 0.78rem; color: #aaa; white-space: nowrap; }
+
+  /* ── REPORT FORM ── */
+  .report-card {
+    background: #fff;
+    border: 1px solid #e4e4e4;
+    border-radius: 14px;
+    padding: 24px 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    margin-bottom: 28px;
+  }
+
+  .report-card h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 4px;
+  }
+
+  .report-card p {
+    font-size: 0.82rem;
+    color: #888;
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+
+  .field { margin-bottom: 14px; }
+
+  .field label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #444;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+  }
+
+  .field input,
+  .field select,
+  .field textarea {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-family: Georgia, serif;
+    color: #111;
+    background: #fafafa;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    border-color: #1a9e8f;
+    box-shadow: 0 0 0 3px rgba(26,158,143,0.1);
+    background: #fff;
+  }
+
+  .field textarea { resize: vertical; min-height: 90px; }
+
+  .submit-btn {
+    width: 100%;
+    padding: 13px;
+    background: #1a9e8f;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.92rem;
+    font-weight: 700;
+    font-family: Georgia, serif;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.15s;
+    margin-top: 4px;
+  }
+  .submit-btn:hover  { opacity: 0.88; }
+  .submit-btn:active { transform: scale(0.98); }
+  .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* toast */
+  .toast {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    margin-top: 14px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  .toast.success { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; display: flex; }
+  .toast.error   { background: #fef2f2; color: #ef4444; border: 1px solid #fecaca; display: flex; }
+
+  /* ── FOOTER ── */
+  .status-footer {
+    text-align: center;
+    font-size: 0.8rem;
+    color: #aaa;
+    line-height: 1.7;
+  }
+  .status-footer a { color: #1a9e8f; text-decoration: none; }
+  a.submit-btn {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  margin-top: 8px;
+}
+/* ── DARK MODE ── */
+@media (prefers-color-scheme: dark) {
+  body { background: #111; }
+  .report-card, .issue-card, .overall-status { 
+    background: #1c1c1c; 
+    border-color: #2a2a2a; 
+  }
+  .issue-title, h2, h3 { color: #f0f0ee; }
+  .issue-desc, .subtitle { color: #888; }
+  .workaround { background: #242424; color: #aaa; }
+  .field input, .field select, .field textarea {
+    background: #1c1c1c;
+    border-color: #2a2a2a;
+    color: #f0f0ee;
+  }
+  .no-issues { background: #1c1c1c; border-color: #2a2a2a; }
+  .back-link { color: #1a9e8f; }
+}
+</style>
+</head>
+<body>
+
+<a href="index.html" class="back-link">
+  ← Back to portfolio
+</a>
+
+<section class="status-section">
+
+  <h2>Site Status</h2>
+  <p class="subtitle">Transparent updates on known bugs &amp; workarounds</p>
+
+  <!-- Overall badge – filled by JS -->
+  <div class="overall-status" id="overall-badge">
+    <div class="pulse-dot dot-warn" id="overall-dot"></div>
+    <div class="overall-label" id="overall-label">Loading… <span></span></div>
+    <div class="last-updated" id="last-updated"></div>
+  </div>
+
+  <!-- Issues list – filled by JS -->
+  <div class="issues-list" id="issues-list">
+    <div class="no-issues"><span>⏳</span> Loading issues…</div>
+  </div>
+
+  <!-- Divider -->
+  <div class="divider">
+    <hr><span>Report an issue not on the list</span><hr>
+  </div>
+
+  <!-- Replace the report-card div with this -->
+<div class="report-card">
+  <h3>Report a Bug</h3>
+  <p>Found something broken that's not listed above? Tap the button below and your email
+    app will open with a pre-filled template. Just fill in the blanks and hit send.</p>
+
+  <a class="submit-btn" href="mailto:Jamesodago6@gmail.com?subject=Bug%20Report%20%E2%80%93%20FelixJames%20Portfolio&body=Section%3A%20(e.g.%20Projects)%0A%0AWhat%20happened%3A%0A%0AYour%20email%20(optional)%3A">
+    📩 Report via Email
+  </a>
+</div>
+
+  <p class="status-footer">
+    Issues are fixed as time allows.<br>
+    This page is manually maintained by <a href="index.html">Felix James</a>.
+  </p>
+
+</section>
+
+<script>
+  // ─────────────────────────────────────────
+  // 1. EmailJS — replace with your real IDs
+  // ─────────────────────────────────────────
+  const EMAILJS_PUBLIC_KEY  = "YOUR_PUBLIC_KEY";
+  const EMAILJS_SERVICE_ID  = "YOUR_SERVICE_ID";
+  const EMAILJS_TEMPLATE_ID = "YOUR_BUG_REPORT_TEMPLATE_ID"; // new template
+
+  emailjs.init(EMAILJS_PUBLIC_KEY);
+
+  // ─────────────────────────────────────────
+  // 2. Load status.json and render issues
+  // ─────────────────────────────────────────
+  async function loadStatus() {
+    try {
+      const res  = await fetch("status.json");
+      const data = await res.json();
+      renderOverall(data);
+      renderIssues(data.issues || []);
+    } catch (e) {
+      document.getElementById("issues-list").innerHTML =
+        `<div class="no-issues"><span>⚠️</span> Couldn't load status data.</div>`;
+    }
+  }
+
+  function renderOverall(data) {
+    const dot   = document.getElementById("overall-dot");
+    const label = document.getElementById("overall-label");
+    const upd   = document.getElementById("last-updated");
+
+    const map = {
+      ok:      { dot: "dot-ok",   text: "All Systems Go",   sub: "everything is working" },
+      partial: { dot: "dot-warn", text: "Partial Issues",   sub: "some features are affected" },
+      down:    { dot: "dot-down", text: "Major Outage",     sub: "site has significant problems" },
+    };
+
+    const cfg = map[data.overall] || map["partial"];
+    dot.className   = `pulse-dot ${cfg.dot}`;
+    label.innerHTML = `${cfg.text} <span>— ${cfg.sub}</span>`;
+    upd.textContent = data.updated ? `Updated ${data.updated}` : "";
+  }
+
+  function renderIssues(issues) {
+    const list = document.getElementById("issues-list");
+
+    if (!issues.length) {
+      list.innerHTML = `<div class="no-issues"><span>✅</span> No known issues right now.</div>`;
+      return;
+    }
+
+    const badgeLabel = { high: "Active", med: "Known", low: "Minor", fixed: "Fixed" };
+
+    list.innerHTML = issues.map(issue => `
+      <div class="issue-card ${issue.severity}">
+        <div class="issue-top">
+          <span class="issue-title">${issue.title}</span>
+          <span class="badge ${issue.severity}">${badgeLabel[issue.severity] || issue.severity}</span>
+        </div>
+        <p class="issue-desc">${issue.desc}</p>
+        ${issue.workaround ? `
+          <div class="workaround">
+            <strong>${issue.severity === "fixed" ? "Resolution" : "Workaround"}</strong>
+            ${issue.workaround}
+          </div>` : ""}
+      </div>
+    `).join("");
+  }
+
+  loadStatus();
+
+  
+</script>
+
+</body>
+</html>

@@ -1692,3 +1692,29 @@
     cursor: default;
     background: transparent;
 }
+/* status floating button*/
+.status-pip {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #f59e0b;
+  box-shadow: 0 0 0 3px rgba(245,158,11,0.25);
+  animation: pip-pulse 2s ease-out infinite;
+  z-index: 999;
+  text-decoration: none;
+  display: block;
+}
+
+.status-pip:hover {
+  transform: scale(1.4);
+  transition: transform 0.2s;
+}
+
+@keyframes pip-pulse {
+  0%   { box-shadow: 0 0 0 3px rgba(245,158,11,0.3); }
+  70%  { box-shadow: 0 0 0 9px rgba(245,158,11,0); }
+  100% { box-shadow: 0 0 0 3px rgba(245,158,11,0.3); }
+}
