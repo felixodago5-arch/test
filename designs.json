@@ -141,5 +141,16 @@
     "image": "designs/promotional flyer.jpg",
     "icon": "fa-utensils",
     "height": 290
+  },
+   {
+    "id": 13,
+    "title": "Flyer – Poultry farm",
+    "category": "poster",
+    "year": "2025",
+    "description": "Vibrant promotional flyer for a localPoultry farm.",
+    "tools": ["CorelDRAW"],
+    "image": "designs/chicks2.png",
+    "icon": "fa-utensils",
+    "height": 290
   }
 ]
