@@ -105,7 +105,8 @@ function stopAutoPlay(){ if(autoSlideInterval) clearInterval(autoSlideInterval);
 prevSlideBtn?.addEventListener('click',()=>{ prevSlide(); resetAutoPlay(); });
 nextSlideBtn?.addEventListener('click',()=>{ nextSlide(); resetAutoPlay(); });
 
-async function loadTestimonials(){ try{ const resp=await fetch(sheetURL); const data=await resp.json(); if(Array.isArray(data)&&data.length) testimonials=data.filter(t=>t.text?.trim()); if(!testimonials.length) throw new Error(); }catch(e){ testimonials=[{name:"Sarah Johnson",company:"Creative Mints",text:"Felix designed a stunning logo!",rating:5},{name:"Michael Ochieng",company:"TechHub KE",text:"Exceeded expectations!",rating:5}]; } buildSlides(); startAutoPlay(); }
+async function loadTestimonials(){ try{ const resp=await fetch(sheetURL); const data=await resp.json(); if(Array.isArray(data)&&data.length) testimonials=data.filter(t=>t.text?.trim()); if(!testimonials.length) throw new Error(); }catch(e){ testimonials=[{name:" Jecinter ",company:"house essentials ✨️ ",text:"I’m really happy with the project delivered. He was patient, creative, and very attentive to details. Any changes I requested were handled quickly and professionally.
+    The end result was better than I imagined.",rating:5},{name:"George ",company:"Nyakwere furnitures",text:"timely delivery 👏 with mockups quit impressed with his job Working with James (FX Graphics) was smooth and professional. He delivered clean, high-quality designs and understood exactly what I wanted without stress. The work was done on time and the results spoke for themselves. If you want serious graphics, James is the guy.",rating:5}]; } buildSlides(); startAutoPlay(); }
 
 const sliderContainerDiv = document.querySelector('.testimonial-slider-container');
 if(sliderContainerDiv){ sliderContainerDiv.addEventListener('mouseenter',stopAutoPlay); sliderContainerDiv.addEventListener('mouseleave',startAutoPlay); }
