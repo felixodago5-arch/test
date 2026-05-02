@@ -12,10 +12,10 @@
   },
   {
     "id": 2,
-    "title": "Event Poster – Music Night",
+    "title": "Event Poster – furniture",
     "category": "poster",
     "year": "2025",
-    "description": "Bold typographic poster for a live music event. Print-ready at A2 size.",
+    "description": "Bold typographic poster for a furniture store. Print-ready at A4 size.",
     "tools": ["CorelDRAW", "Photoshop"],
     "image": "designs/chair.png",
     "icon": "fa-image",
@@ -39,7 +39,7 @@
     "year": "2024",
     "description": "Bold typographic poster for a football match. Print-ready at A4 size.",
     "tools": ["CorelDRAW", "Photoshop"],
-    "image": "designs/Document.football.png",
+    "image": "designs/foot ball2.png",
     "icon": "fa-pen-nib",
     "height": 260
   },
