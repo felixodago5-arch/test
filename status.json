@@ -3,22 +3,16 @@
   "updated": "2 May 2026",
   "issues": [
     {
-      "title": "Project modal won't close (× button broken)",
-      "severity": "high",
-      "desc": "Clicking a project card opens the design preview, but the × close button does not respond.",
-      "workaround": "Press Esc on your keyboard, or tap anywhere outside the preview card to dismiss it."
-    },
-    {
       "title": "Not all designs are displayed",
       "severity": "med",
       "desc": "The Projects section currently shows a limited selection of work due to layout constraints.",
       "workaround": "Reach out via the Contact section and I'll send you a direct link to the full portfolio."
     },
 {
-      "title": "some cards are empty",
+      "title": "Broken cards",
       "severity": "med",
-      "desc": "The Projects section currently shows some empty cards am currently working on that.",
-      "workaround": "You can use the social media links below to check other latest designs that are not here."
+      "desc": "The Projects section currently shows Broken image am currently working on that to restore them.",
+      "workaround": "Reach out via the Contact section and I'll send you a direct link to the full portfolio."
     }
   ]
 }
