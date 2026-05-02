@@ -1,4 +1,4 @@
-const CACHE_NAME = 'felixjames-v1';
+const CACHE_NAME = 'felixjames-v2';
 const ASSETS = [
   '/test/',
   '/test/index.html',
@@ -9,11 +9,9 @@ const ASSETS = [
   '/test/status.html',
   '/test/icon-192.png',
   '/test/icon-512.png',
-  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
-  'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap'
 ];
 
-// Install — cache all assets
+// Install
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
@@ -21,7 +19,7 @@ self.addEventListener('install', event => {
   self.skipWaiting();
 });
 
-// Activate — clean up old caches
+// Activate
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys =>
@@ -31,33 +29,59 @@ self.addEventListener('activate', event => {
   self.clients.claim();
 });
 
-// Fetch — serve from cache, fall back to network
-// ✅ ADDED: auto-cache images + offline placeholder
+// Fetch — smart strategy per file type
 self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request).then(cached => {
-      if (cached) return cached;
+  const url = new URL(event.request.url);
+  const isImage = event.request.destination === 'image';
+  const isExternal = url.origin !== self.location.origin;
 
-      return fetch(event.request).then(response => {
-        // Auto-cache images as they load for offline use
-        if (event.request.destination === 'image') {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
-        }
-        return response;
-      }).catch(() => {
-        // Offline fallback for images
-        if (event.request.destination === 'image') {
+  // ── External (fonts, CDN) — network only, don't intercept
+  if (isExternal) {
+    event.respondWith(fetch(event.request));
+    return;
+  }
+
+  // ── Images — cache first, lazy cache on first load
+  if (isImage) {
+    event.respondWith(
+      caches.match(event.request).then(cached => {
+        if (cached) return cached;
+
+        return fetch(event.request).then(response => {
+          // Only cache valid responses
+          if (response && response.status === 200) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+          }
+          return response;
+        }).catch(() => {
+          // Offline placeholder
           return new Response(
             `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200">
               <rect width="200" height="200" fill="#1a1a1a"/>
-              <text x="50%" y="50%" fill="#1a9e8f" text-anchor="middle" 
+              <text x="50%" y="50%" fill="#1a9e8f" text-anchor="middle"
                 font-size="12" font-family="sans-serif" dy=".3em">Offline</text>
             </svg>`,
             { headers: { 'Content-Type': 'image/svg+xml' } }
           );
-        }
-      });
+        });
+      })
+    );
+    return;
+  }
+
+  // ── Core files (HTML, CSS, JS) — network first, cache fallback
+  // This keeps the page fresh and smooth on good connections
+  event.respondWith(
+    fetch(event.request).then(response => {
+      if (response && response.status === 200) {
+        const clone = response.clone();
+        caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+      }
+      return response;
+    }).catch(() => {
+      // Offline — serve from cache
+      return caches.match(event.request);
     })
   );
 });
