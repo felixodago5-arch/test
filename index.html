@@ -39,10 +39,11 @@
             <ul class="nav-links">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#about">About</a></li>
-                <li><a href="#tools">Tools</a></li>
                 <li><a href="#projects">Projects</a></li>
                 <li><a href="#testimonials">Testimonials</a></li>
-                <li><a href="#contact">Contact</a></li>
+                 <li><a href="#contact">Contact</a></li>
+               
+                <li><a href="commission.html">Commission</a></li>
                 <li><a href="#" class="nav-pricing-btn" id="navPricingBtn"><i class="fas fa-tag"></i> Pricing</a></li>
             </ul>
             
@@ -59,7 +60,7 @@
                 <p>I'm Felix James, a graphics designer specializing in brand identity and digital illustrations that makes an impact.</p>
                 <div class="button-strip">
                     <a href="#projects" class="btn">View My Work</a>
-                    <a href="#contact" class="btn btn-outline">Get In Touch</a>
+                    <a href="commission.html" class="btn btn-outline">Get In Touch</a>
                     <button class="btn btn-outline" id="viewToolsBtn" style="max-width:280px; margin-top:10px;">
                                <i class="fas fa-tools"></i> View My Tools
                     </button>
@@ -76,28 +77,33 @@
     </section>
 
     <section id="about">
-        <div class="container">
-            <h2 class="section-title">About Me</h2>
-            <div class="about-content">
-                <div class="about-text">
-                  <h3>Designing with Purpose</h3>
-                  <p>I’m a creative designer focused on building clean, impactful visual experiences. From graphic design to interactive web interfaces, I’m constantly refining my skills and exploring new ways to bring ideas to life.</p>
-
-                <p>I believe great design should be clear, functional, and engaging. Whether creating brand visuals, digital content, or responsive web experiences, my goal is to craft work that communicates effectively and leaves a lasting impression.</p>
-                    <div class="skills">
-                        <span class="skill">Brand Identity</span>
-                        <span class="skill">Digital Illustration</span>
-                        <span class="skill">Typography</span>
-                        <span class="skill">Print Design</span>
-                    </div>
-                </div>
-                <div class="about-image">
-                    <img src="pic47.jpg" alt="Felix James">
-                </div>
-            </div>
+  <div class="container">
+    <h2 class="section-title">
+      About Me
+      <button class="listen-btn" onclick="speak(this, document.getElementById('about-text').innerText)">
+        🔊 Listen
+      </button>
+    </h2>
+    <div class="about-content">
+      <div class="about-text">
+        <h3>Designing with Purpose</h3>
+        <div id="about-text">
+          <p>I'm a creative designer focused on building clean, impactful visual experiences. From graphic design to interactive web interfaces, I'm constantly refining my skills and exploring new ways to bring ideas to life.</p>
+          <p>I believe great design should be clear, functional, and engaging. Whether creating brand visuals, digital content, or responsive web experiences, my goal is to craft work that communicates effectively and leaves a lasting impression.</p>
         </div>
-    </section>
-
+        <div class="skills">
+          <span class="skill">Brand Identity</span>
+          <span class="skill">Digital Illustration</span>
+          <span class="skill">Typography</span>
+          <span class="skill">Print Design</span>
+        </div>
+      </div>
+      <div class="about-image">
+        <img src="pic47.jpg" alt="Felix James">
+      </div>
+    </div>
+  </div>
+</section>
    
 
    <!--<section id="projects">
@@ -552,7 +558,16 @@
 </a>
 </div>
 
-
+<!-- ===== TOOLS VIEW ===== -->
+<div class="app-view" id="toolsView">
+    <div class="view-header">
+        <button class="view-back" id="toolsBack"><i class="fas fa-arrow-left"></i></button>
+        <h2 class="view-title">Tools & Software</h2>
+    </div>
+    <div class="view-body">
+        <!-- paste your entire tools section content here (everything inside the tools section div) -->
+    </div>
+</div>
 <!-- Status floating button -->
 <a href="status.html" class="status-pip" title="Site Status">
   <span class="pip-dot"></span>

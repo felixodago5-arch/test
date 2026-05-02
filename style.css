@@ -1718,3 +1718,29 @@
   70%  { box-shadow: 0 0 0 9px rgba(245,158,11,0); }
   100% { box-shadow: 0 0 0 3px rgba(245,158,11,0.3); }
 }
+/*text to speach*/
+.listen-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--teal-border, rgba(26,158,143,0.25));
+  background: var(--teal-dim, rgba(26,158,143,0.1));
+  color: var(--teal, #1a9e8f);
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity 0.2s, background 0.2s;
+  vertical-align: middle;
+  margin-left: 10px;
+}
+
+.listen-btn:hover { opacity: 0.8; }
+
+.listen-btn.speaking {
+  background: rgba(239,68,68,0.1);
+  border-color: rgba(239,68,68,0.3);
+  color: #ef4444;
+}

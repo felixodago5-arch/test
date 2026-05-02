@@ -699,3 +699,39 @@ document.getElementById('toolsBack')?.addEventListener('click', () => {
 
 // ✅ FIX 4 — called directly, no DOMContentLoaded needed
 loadTestimonials();
+
+//tex to speach
+  let activeSpeech = null;
+
+  function speak(btnEl, text) {
+    // If already speaking, stop
+    if (window.speechSynthesis.speaking) {
+      window.speechSynthesis.cancel();
+      document.querySelectorAll('.listen-btn').forEach(b => {
+        b.textContent = '🔊 Listen';
+        b.classList.remove('speaking');
+      });
+      if (activeSpeech === btnEl) {
+        activeSpeech = null;
+        return;
+      }
+    }
+
+    activeSpeech = btnEl;
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang  = 'en-US';
+    utterance.rate  = 1.0;
+    utterance.pitch = 1;
+
+    // Button state — speaking
+    btnEl.textContent = '⏹ Stop';
+    btnEl.classList.add('speaking');
+
+    utterance.onend = () => {
+      btnEl.textContent = '🔊 Listen';
+      btnEl.classList.remove('speaking');
+      activeSpeech = null;
+    };
+
+    window.speechSynthesis.speak(utterance);
+  }

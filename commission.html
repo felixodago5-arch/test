@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="icon-192.png" type="image/png">
+<title>Commission a Design – FelixJames</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f5f5f5" media="(prefers-color-scheme: light)">
+
+<style>
+  /* ── THEME VARIABLES ── */
+  :root {
+    --teal: #1a9e8f;
+    --teal-dim: rgba(26,158,143,0.12);
+    --teal-border: rgba(26,158,143,0.25);
+  }
+
+  [data-theme="dark"] {
+    --bg: #0d0d0d;
+    --bg2: #141414;
+    --card: #1a1a1a;
+    --border: #242424;
+    --text: #f0f0ee;
+    --text2: #888;
+    --text3: #555;
+    --input-bg: #111;
+    --shadow: rgba(0,0,0,0.4);
+    --grid-line: rgba(26,158,143,0.04);
+  }
+
+  [data-theme="light"] {
+    --bg: #f5f5f3;
+    --bg2: #ececea;
+    --card: #ffffff;
+    --border: #e0e0de;
+    --text: #111;
+    --text2: #666;
+    --text3: #aaa;
+    --input-bg: #fafafa;
+    --shadow: rgba(0,0,0,0.08);
+    --grid-line: rgba(26,158,143,0.06);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Lato', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    transition: background 0.3s, color 0.3s;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Grid texture */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 32px 32px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Teal glow */
+  .glow-top {
+    position: fixed;
+    top: -100px; right: -100px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(26,158,143,0.12) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(10px);
+  }
+
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: var(--text);
+    text-decoration: none;
+    letter-spacing: -0.5px;
+  }
+  .logo span { color: var(--teal); }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .back-btn {
+    font-size: 0.8rem;
+    color: var(--text2);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: color 0.2s;
+  }
+  .back-btn:hover { color: var(--teal); }
+
+  /* Theme toggle */
+  .theme-toggle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--card);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    transition: background 0.2s, border 0.2s;
+  }
+  .theme-toggle:hover { border-color: var(--teal); }
+
+  /* ── MAIN LAYOUT ── */
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    margin-bottom: 40px;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--teal);
+    background: var(--teal-dim);
+    border: 1px solid var(--teal-border);
+    padding: 5px 12px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.4rem;
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -1.5px;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+  .hero h1 span { color: var(--teal); font-style: italic; }
+
+  .hero p {
+    font-size: 0.9rem;
+    color: var(--text2);
+    line-height: 1.65;
+    font-weight: 300;
+    max-width: 480px;
+  }
+
+  /* ── HOW IT WORKS ── */
+  .how-it-works {
+    margin-bottom: 36px;
+  }
+
+  .section-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 16px;
+  }
+
+  .steps-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+
+  .how-step {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 12px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .how-step::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--teal);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .how-step:hover::after { opacity: 1; }
+
+  .how-num {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--teal-dim);
+    border: 1px solid var(--teal-border);
+    color: var(--teal);
+    font-size: 0.72rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 8px;
+  }
+
+  .how-title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 3px;
+    font-family: 'Playfair Display', serif;
+  }
+
+  .how-desc {
+    font-size: 0.62rem;
+    color: var(--text3);
+    line-height: 1.4;
+    font-weight: 300;
+  }
+
+  /* ── TRUST STRIP ── */
+  .trust-strip {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 36px;
+    flex-wrap: wrap;
+  }
+
+  .trust-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.72rem;
+    color: var(--text2);
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 400;
+  }
+
+  .trust-pill .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--teal);
+    flex-shrink: 0;
+  }
+
+  /* ── FORM CARD ── */
+  .form-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 24px;
+    box-shadow: 0 4px 24px var(--shadow);
+    margin-bottom: 24px;
+  }
+
+  .form-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .form-card .form-sub {
+    font-size: 0.78rem;
+    color: var(--text2);
+    margin-bottom: 24px;
+    font-weight: 300;
+    line-height: 1.5;
+  }
+
+  .field { margin-bottom: 16px; }
+
+  .field label {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--text2);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 6px;
+  }
+
+  .field input,
+  .field textarea,
+  .field select {
+    width: 100%;
+    padding: 12px 14px;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-family: 'Lato', sans-serif;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    
+  }
+
+  .field input:focus,
+  .field textarea:focus,
+  .field select:focus {
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(26,158,143,0.1);
+  }
+
+  .field textarea { resize: vertical; min-height: 100px; }
+
+  /* Service checkboxes */
+  .service-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .service-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 11px 13px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    user-select: none;
+  }
+
+  .service-option input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--teal);
+    flex-shrink: 0;
+    padding: 0;
+    border-radius: 4px;
+  }
+
+  .service-option:has(input:checked) {
+    border-color: var(--teal);
+    background: var(--teal-dim);
+  }
+
+  .service-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  /* Budget row */
+  .budget-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  /* Submit button */
+  .submit-btn {
+    width: 100%;
+    padding: 15px;
+    background: var(--teal);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    font-family: 'Lato', sans-serif;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.15s;
+    margin-top: 8px;
+    letter-spacing: 0.02em;
+  }
+  .submit-btn:hover  { opacity: 0.88; }
+  .submit-btn:active { transform: scale(0.98); }
+  .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ── PAYMENT SCREEN ── */
+  .payment-screen {
+    display: none;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px 24px;
+    box-shadow: 0 4px 24px var(--shadow);
+    text-align: center;
+    margin-bottom: 24px;
+    animation: slideUp 0.35s ease;
+  }
+
+  .payment-screen.visible { display: block; }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .payment-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--teal-dim);
+    border: 2px solid var(--teal-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    margin: 0 auto 16px;
+  }
+
+  .payment-screen h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .payment-screen p {
+    font-size: 0.85rem;
+    color: var(--text2);
+    line-height: 1.6;
+    margin-bottom: 24px;
+    font-weight: 300;
+  }
+
+  /* M-Pesa card */
+  .mpesa-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: left;
+  }
+
+  .mpesa-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text3);
+    margin-bottom: 12px;
+  }
+
+  .mpesa-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .mpesa-row:last-child { border-bottom: none; }
+
+  .mpesa-key {
+    font-size: 0.78rem;
+    color: var(--text2);
+    font-weight: 300;
+  }
+
+  .mpesa-val {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--text);
+    font-family: 'Playfair Display', serif;
+  }
+
+  .mpesa-val.teal { color: var(--teal); font-size: 1.1rem; }
+
+  /* Copy button */
+  .copy-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.72rem;
+    color: var(--teal);
+    background: var(--teal-dim);
+    border: 1px solid var(--teal-border);
+    border-radius: 6px;
+    padding: 4px 10px;
+    cursor: pointer;
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+    transition: opacity 0.2s;
+  }
+  .copy-btn:hover { opacity: 0.8; }
+
+  /* Steps after payment */
+  .next-steps {
+    text-align: left;
+    margin-bottom: 20px;
+  }
+
+  .next-steps h3 {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text3);
+    margin-bottom: 12px;
+  }
+
+  .next-step-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.83rem;
+    color: var(--text2);
+    line-height: 1.5;
+  }
+  .next-step-item:last-child { border-bottom: none; }
+
+  .step-circle {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--teal-dim);
+    border: 1px solid var(--teal-border);
+    color: var(--teal);
+    font-size: 0.65rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .wa-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 14px;
+    background: #25d366;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.92rem;
+    font-weight: 700;
+    font-family: 'Lato', sans-serif;
+    cursor: pointer;
+    text-decoration: none;
+    transition: opacity 0.2s;
+    margin-bottom: 10px;
+  }
+  .wa-btn:hover { opacity: 0.88; }
+
+  .restart-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text2);
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 0.82rem;
+    font-family: 'Lato', sans-serif;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .restart-btn:hover { border-color: var(--teal); color: var(--teal); }
+
+  /* ── GUARANTEE CARD ── */
+  .guarantee-card {
+    background: var(--teal-dim);
+    border: 1px solid var(--teal-border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    margin-bottom: 24px;
+  }
+
+  .guarantee-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 2px; }
+
+  .guarantee-text h3 {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--teal);
+    margin-bottom: 4px;
+    font-family: 'Playfair Display', serif;
+  }
+
+  .guarantee-text p {
+    font-size: 0.78rem;
+    color: var(--text2);
+    line-height: 1.55;
+    font-weight: 300;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--text3);
+    line-height: 1.7;
+    position: relative;
+    z-index: 1;
+    padding-bottom: 32px;
+  }
+
+  footer a { color: var(--teal); text-decoration: none; }
+
+  /* Required star */
+  .req { color: var(--teal); margin-left: 2px; }
+
+  /* Error state */
+  .field-error {
+    font-size: 0.72rem;
+    color: #ef4444;
+    margin-top: 4px;
+    display: none;
+  }
+  .field.has-error input,
+  .field.has-error textarea,
+  .field.has-error select {
+    border-color: #ef4444;
+  }
+  .field.has-error .field-error { display: block; }
+/* Listening state for voice input (if implemented) */
+  .listen-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid var(--teal-border);
+  background: var(--teal-dim);
+  color: var(--teal);
+  cursor: pointer;
+  font-family: 'Lato', sans-serif;
+  transition: opacity 0.2s;
+  vertical-align: middle;
+  margin-left: 8px;
+}
+.listen-btn:hover { opacity: 0.8; }
+.listen-btn.speaking {
+  background: rgba(239,68,68,0.1);
+  border-color: rgba(239,68,68,0.3);
+  color: #ef4444;
+}
+</style>
+</head>
+<body>
+
+<div class="glow-top"></div>
+
+<!-- HEADER -->
+<header>
+  <a href="index.html" class="logo">Felix<span>James</span></a>
+  <div class="header-right">
+    <a href="index.html" class="back-btn">← Portfolio</a>
+    <button class="theme-toggle" id="themeToggle" title="Toggle theme">🌙</button>
+  </div>
+</header>
+
+<main>
+
+  <div class="hero">
+  <div class="hero-badge">⚡ Commission a Design</div>
+  <h1>Let's Create<br>Something <span>Bold.</span>
+    <button class="listen-btn" onclick="speak(this, document.getElementById('hero-text').innerText)">
+      🔊 Listen
+    </button>
+  </h1>
+  <p id="hero-text">Fill in the brief below and secure your slot with a 50% deposit. I'll get back to you within 24 hours to confirm and begin. No deposit, no start — simple and fair for both of us.</p>
+</div>
+
+
+  <!-- HOW IT WORKS -->
+
+  <div class="how-it-works">
+  <div class="section-label">
+    How it works
+    <button class="listen-btn" onclick="speak(this, howitworksText())">
+      🔊 Listen
+    </button>
+  </div>
+  <!-- steps-row stays exactly the same -->
+  <div class="how-it-works">
+    <div class="section-label"></div>
+    <div class="steps-row">
+      <div class="how-step">
+        <div class="how-num">1</div>
+        <div class="how-title">Brief</div>
+        <div class="how-desc">Fill the form with your project details</div>
+      </div>
+      <div class="how-step">
+        <div class="how-num">2</div>
+        <div class="how-title">Deposit</div>
+        <div class="how-desc">Pay 50% via M-Pesa to secure your slot</div>
+      </div>
+      <div class="how-step">
+        <div class="how-num">3</div>
+        <div class="how-title">Design</div>
+        <div class="how-desc">I create — you review and request revisions</div>
+      </div>
+      <div class="how-step">
+        <div class="how-num">4</div>
+        <div class="how-title">Deliver</div>
+        <div class="how-desc">Pay balance, receive final files</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRUST PILLS -->
+  <div class="trust-strip">
+    <div class="trust-pill"><div class="dot"></div> Revisions until you're satisfied</div>
+    <div class="trust-pill"><div class="dot"></div> Preview before final payment</div>
+    <div class="trust-pill"><div class="dot"></div> 24hr response time</div>
+    <div class="trust-pill"><div class="dot"></div> Watermarked draft first</div>
+  </div>
+
+  <!-- GUARANTEE -->
+   <div class="guarantee-card">
+  <div class="guarantee-icon">🛡️</div>
+  <div class="guarantee-text">
+    <h3>My Guarantee
+      <button class="listen-btn" onclick="speak(this, document.getElementById('guarantee-text').innerText)">
+        🔊 Listen
+      </button>
+    </h3>
+    <p id="guarantee-text">You'll see a watermarked preview before paying the remaining 50%. Not happy with the direction? I'll revise until it's right. You only receive final files once you're fully satisfied and the balance is cleared.</p>
+  </div>
+</div>
+  
+
+  <!-- FORM -->
+  <div class="form-card" id="formCard">
+    <h2>Project Brief</h2>
+    <p class="form-sub">Tell me about your project. The more detail you give, the better the outcome.</p>
+
+    <div class="field" id="field-name">
+      <label>Your Name <span class="req">*</span></label>
+      <input type="text" id="inp-name" placeholder="e.g. Brian Kamau">
+      <div class="field-error">Please enter your name</div>
+    </div>
+
+    <div class="field" id="field-email">
+      <label>Email Address <span class="req">*</span></label>
+      <input type="email" id="inp-email" placeholder="you@example.com">
+      <div class="field-error">Please enter a valid email</div>
+    </div>
+
+    <div class="field" id="field-service">
+      <label>Service Needed <span class="req">*</span></label>
+      <div class="service-grid">
+        <label class="service-option">
+          <input type="checkbox" value="Social Media Graphics"> 
+          <span class="service-label">Social Media Graphics</span>
+        </label>
+        <label class="service-option">
+          <input type="checkbox" value="Print Design">
+          <span class="service-label">Print Design</span>
+        </label>
+        <label class="service-option">
+          <input type="checkbox" value="Illustration">
+          <span class="service-label">Illustration</span>
+        </label>
+        <label class="service-option">
+          <input type="checkbox" value="Not Sure Yet">
+          <span class="service-label">Not Sure Yet</span>
+        </label>
+      </div>
+      <div class="field-error">Please select at least one service</div>
+    </div>
+
+    <div class="field" id="field-desc">
+      <label>Project Description <span class="req">*</span></label>
+      <textarea id="inp-desc" placeholder="Describe what you need — style, colors, mood, purpose, target audience, anything that helps me understand your vision…"></textarea>
+      <div class="field-error">Please describe your project</div>
+    </div>
+
+    <div class="budget-row">
+      <div class="field" id="field-budget">
+        <label>Budget (KES) <span class="req">*</span></label>
+        <select id="inp-budget">
+          <option value="">— Select range —</option>
+          <option>500 – 1,000</option>
+          <option>1,000 – 3,000</option>
+          <option>3,000 – 5,000</option>
+          <option>5,000 – 10,000</option>
+          <option>10,000+</option>
+        </select>
+        <div class="field-error">Please select a budget range</div>
+      </div>
+
+      <div class="field">
+        <label>Deadline</label>
+        <input type="date" id="inp-deadline">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Reference Images / Inspiration</label>
+      <input type="text" id="inp-refs" placeholder="Google Drive link, Pinterest board, or describe the style">
+    </div>
+
+    <button class="submit-btn" id="submitBtn" onclick="handleSubmit()">
+      Continue to Payment →
+    </button>
+  </div>
+
+  <!-- PAYMENT SCREEN -->
+  <div class="payment-screen" id="paymentScreen">
+
+    <div class="payment-icon">💳</div>
+    <h2>Almost There!</h2>
+    <p>Your brief has been noted. Now secure your slot by sending the 50% deposit via M-Pesa Send Money. Once done, send your payment screenshot on WhatsApp and I'll confirm within a few hours.</p>
+
+    <div class="mpesa-card">
+      <div class="mpesa-label">M-Pesa Send Money Details</div>
+      <div class="mpesa-row">
+        <span class="mpesa-key">Send To (Number)</span>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="mpesa-val teal" id="displayNumber">0757823846</span>
+          <button class="copy-btn" onclick="copyNumber()">📋 Copy</button>
+        </div>
+      </div>
+      <div class="mpesa-row">
+        <span class="mpesa-key">Account Name</span>
+        <span class="mpesa-val">Felix James</span>
+      </div>
+      <div class="mpesa-row">
+        <span class="mpesa-key">Amount (50% deposit)</span>
+        <span class="mpesa-val teal" id="depositAmount">—</span>
+      </div>
+      <div class="mpesa-row">
+        <span class="mpesa-key">Reference / Reason</span>
+        <span class="mpesa-val" style="font-size:0.8rem">Design Deposit</span>
+      </div>
+    </div>
+
+    <div class="next-steps">
+      <h3>After Paying</h3>
+      <div class="next-step-item">
+        <div class="step-circle">1</div>
+        <span>Screenshot your M-Pesa confirmation message</span>
+      </div>
+      <div class="next-step-item">
+        <div class="step-circle">2</div>
+        <span>Send the screenshot on WhatsApp using the button below — include your name and project type</span>
+      </div>
+      <div class="next-step-item">
+        <div class="step-circle">3</div>
+        <span>I'll confirm receipt and we begin. Expect a response within 24 hours</span>
+      </div>
+      <div class="next-step-item">
+        <div class="step-circle">4</div>
+        <span>You'll receive a watermarked preview first — balance paid only when you're fully satisfied</span>
+      </div>
+    </div>
+
+    <a class="wa-btn" id="waConfirmBtn" href="#" target="_blank">
+      📲 Send Screenshot on WhatsApp
+    </a>
+
+    <button class="restart-btn" onclick="restart()">← Edit my brief</button>
+
+  </div>
+
+  <footer>
+    Maintained by <a href="index.html">Felix James</a> · 
+    <a href="status.html">Site Status</a> · 
+    Questions? <a href="https://wa.me/254757823846">WhatsApp me</a>
+  </footer>
+
+</main>
+
+<script>
+  // ── THEME ──
+  const toggle = document.getElementById('themeToggle');
+  const html   = document.documentElement;
+
+  const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  let isDark = systemDark;
+  html.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  toggle.textContent = isDark ? '☀️' : '🌙';
+
+  toggle.addEventListener('click', () => {
+    isDark = !isDark;
+    html.setAttribute('data-theme', isDark ? 'dark' : 'light');
+    toggle.textContent = isDark ? '☀️' : '🌙';
+  });
+
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+    isDark = e.matches;
+    html.setAttribute('data-theme', isDark ? 'dark' : 'light');
+    toggle.textContent = isDark ? '☀️' : '🌙';
+  });
+
+  // ── FORM VALIDATION & SUBMIT ──
+  function validate() {
+    let valid = true;
+
+    const name = document.getElementById('inp-name').value.trim();
+    const fName = document.getElementById('field-name');
+    fName.classList.toggle('has-error', !name);
+    if (!name) valid = false;
+
+    const email = document.getElementById('inp-email').value.trim();
+    const fEmail = document.getElementById('field-email');
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    fEmail.classList.toggle('has-error', !emailOk);
+    if (!emailOk) valid = false;
+
+    const services = [...document.querySelectorAll('.service-option input:checked')];
+    const fService = document.getElementById('field-service');
+    fService.classList.toggle('has-error', !services.length);
+    if (!services.length) valid = false;
+
+    const desc = document.getElementById('inp-desc').value.trim();
+    const fDesc = document.getElementById('field-desc');
+    fDesc.classList.toggle('has-error', !desc);
+    if (!desc) valid = false;
+
+    const budget = document.getElementById('inp-budget').value;
+    const fBudget = document.getElementById('field-budget');
+    fBudget.classList.toggle('has-error', !budget);
+    if (!budget) valid = false;
+
+    return valid;
+  }
+
+  function handleSubmit() {
+    if (!validate()) return;
+
+    const name     = document.getElementById('inp-name').value.trim();
+    const services = [...document.querySelectorAll('.service-option input:checked')].map(i => i.value).join(', ');
+    const budget   = document.getElementById('inp-budget').value;
+    const desc     = document.getElementById('inp-desc').value.trim();
+    const deadline = document.getElementById('inp-deadline').value;
+
+    // Calculate deposit estimate from budget range
+    const depositMap = {
+      '500 – 1,000':    'KES 250 – 500',
+      '1,000 – 3,000':  'KES 500 – 1,500',
+      '3,000 – 5,000':  'KES 1,500 – 2,500',
+      '5,000 – 10,000': 'KES 2,500 – 5,000',
+      '10,000+':         'KES 5,000+'
+    };
+    document.getElementById('depositAmount').textContent = depositMap[budget] || '50% of agreed quote';
+
+    // Build WhatsApp message
+    const deadlineStr = deadline ? `\nDeadline: ${deadline}` : '';
+    const waText = encodeURIComponent(
+      `Hi Felix! I've just submitted a project brief and sent my deposit.\n\n` +
+      `Name: ${name}\n` +
+      `Service: ${services}\n` +
+      `Budget: ${budget}${deadlineStr}\n\n` +
+      `Brief: ${desc.slice(0, 200)}${desc.length > 200 ? '…' : ''}\n\n` +
+      `[Please find my M-Pesa screenshot attached]`
+    );
+    document.getElementById('waConfirmBtn').href = `https://wa.me/254757823846?text=${waText}`;
+
+    // Show payment screen
+    document.getElementById('formCard').style.display = 'none';
+    const pay = document.getElementById('paymentScreen');
+    pay.classList.add('visible');
+    pay.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function copyNumber() {
+    navigator.clipboard.writeText('0757823846').then(() => {
+      const btn = document.querySelector('.copy-btn');
+      btn.textContent = '✅ Copied';
+      setTimeout(() => btn.textContent = '📋 Copy', 2000);
+    });
+  }
+
+  function restart() {
+    document.getElementById('paymentScreen').classList.remove('visible');
+    document.getElementById('formCard').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Clear errors on input
+  document.querySelectorAll('input, textarea, select').forEach(el => {
+    el.addEventListener('input', () => {
+      el.closest('.field')?.classList.remove('has-error');
+    });
+  });
+</script>
+<script>
+  let activeSpeech = null;
+
+  function speak(btnEl, text) {
+    if (window.speechSynthesis.speaking) {
+      window.speechSynthesis.cancel();
+      document.querySelectorAll('.listen-btn').forEach(b => {
+        b.textContent = '🔊 Listen';
+        b.classList.remove('speaking');
+      });
+      if (activeSpeech === btnEl) {
+        activeSpeech = null;
+        return;
+      }
+    }
+
+    activeSpeech = btnEl;
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang  = 'en-US';
+    utterance.rate  = 1.0;
+    utterance.pitch = 1;
+
+    btnEl.textContent = '⏹ Stop';
+    btnEl.classList.add('speaking');
+
+    utterance.onend = () => {
+      btnEl.textContent = '🔊 Listen';
+      btnEl.classList.remove('speaking');
+      activeSpeech = null;
+    };
+
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function howitworksText() {
+    return `Here is how commissioning a design works.
+    Step 1: Fill the brief form with your project details.
+    Step 2: Pay a 50 percent deposit via M-Pesa to secure your slot.
+    Step 3: I create the design — you review and request revisions.
+    Step 4: Pay the balance and receive your final files.
+    No deposit, no start.`;
+  }
+</script>
+</body>
+</html>
