@@ -746,3 +746,49 @@ loadTestimonials();
       .catch(err => console.log('SW failed:', err));
   }
 
+// ========== FIREBASE PUSH NOTIFICATIONS ==========
+const firebaseConfig = {
+    apiKey: "AIzaSyAh0JpM0BqgCwxkhFG32m6VH6okQIiSops",
+    authDomain: "felix-portfolio-8b3a8.firebaseapp.com",
+    projectId: "felix-portfolio-8b3a8",
+    storageBucket: "felix-portfolio-8b3a8.firebasestorage.app",
+    messagingSenderId: "439075265698",
+    appId: "1:439075265698:web:058c014a4f4c32a9444bfb"
+};
+
+firebase.initializeApp(firebaseConfig);
+const messaging = firebase.messaging();
+
+// Request notification permission
+async function requestNotificationPermission() {
+    try {
+        const permission = await Notification.requestPermission();
+        if (permission === 'granted') {
+            const token = await messaging.getToken({
+                vapidKey: 'BEXAFghi2VaVz5RBCkZmrU-XoKLG4f48EpwOmzC7XkdN9QWcW_oSh-k42hNbRVqqvVQUI3B0hwer2x6EWqlatsM',
+                serviceWorkerRegistration: await navigator.serviceWorker.getRegistration('/felix/firebase-messaging-sw.js')
+            });
+            if (token) {
+                console.log('FCM Token:', token);
+                localStorage.setItem('fcmToken', token);
+            }
+        }
+    } catch (err) {
+        console.error('Notification permission error:', err);
+    }
+}
+
+// Handle foreground notifications
+messaging.onMessage((payload) => {
+    const { title, body } = payload.notification;
+    if (Notification.permission === 'granted') {
+        new Notification(title, {
+            body,
+            icon: '/felix/icon-192.png',
+            badge: '/felix/icon-192.png'
+        });
+    }
+});
+
+// Ask for permission after 3 seconds so it doesn't feel aggressive
+setTimeout(requestNotificationPermission, 3000);
