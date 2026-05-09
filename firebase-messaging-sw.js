@@ -20,7 +20,7 @@ messaging.onBackgroundMessage((payload) => {
         icon: icon || '/felix/icon-192.png',
         badge: '/felix/icon-192.png',
         vibrate: [200, 100, 200],
-        data: { url: 'https://felixodago5-arch.github.io/felix/' }
+        data: { url: 'https://felixodago5-arch.github.io/test/' }
     });
 });
 
@@ -28,6 +28,6 @@ messaging.onBackgroundMessage((payload) => {
 self.addEventListener('notificationclick', (event) => {
     event.notification.close();
     event.waitUntil(
-        clients.openWindow(event.notification.data?.url || 'https://felixodago5-arch.github.io/felix/')
+        clients.openWindow(event.notification.data?.url || 'https://felixodago5-arch.github.io/test/')
     );
 });
