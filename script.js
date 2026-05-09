@@ -748,7 +748,7 @@ loadTestimonials();
 
 // ========== FIREBASE PUSH NOTIFICATIONS ==========
 const firebaseConfig = {
-    apiKey: "AIzaSyAh0JpM0BqgCwxkhFG32m6VH6okQIiSops",
+    apiKey: 
     authDomain: "felix-portfolio-8b3a8.firebaseapp.com",
     projectId: "felix-portfolio-8b3a8",
     storageBucket: "felix-portfolio-8b3a8.firebasestorage.app",
