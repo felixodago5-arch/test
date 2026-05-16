@@ -5,8 +5,8 @@
     {
       "title": "Currently everthing is working ",
       "severity": "med",
-      "desc": "You will realise the designs are not loading offline, that's because i shifted from cache to live fect from database.",
-      "workaround": "you will have to be online to view them."
+      "desc": "You will realise that the designs are not loading offline, that's because i shifted from cache to live fetch from database.",
+      "workaround": "my main aim was for a faster loading at first glance on the web page."
     }
 
   ]
