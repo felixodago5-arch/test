@@ -7,7 +7,7 @@
       "severity": "med",
       "desc": "You will realise the designs are not loading offline, that's because i shifted from cache to live fect from database.",
       "workaround": "yYou will have to be online to view them."
-    },
+    }
 
   ]
 }
