@@ -3,10 +3,10 @@
   "updated": "16 May 2026",
   "issues": [
     {
-      "title": "Currently evertheing is working ",
+      "title": "Currently everthing is working ",
       "severity": "med",
       "desc": "You will realise the designs are not loading offline, that's because i shifted from cache to live fect from database.",
-      "workaround": "yYou will have to be online to view them."
+      "workaround": "you will have to be online to view them."
     }
 
   ]
