@@ -2,9 +2,9 @@
   "name": "Felix James | Graphics Designer",
   "short_name": "FelixJames",
   "description": "Graphics design portfolio — brand identity, posters, social media & more.",
-"start_url": "https://felixodago5-arch.github.io/test/",
+  "start_url": "https://felixodago5-arch.github.io/test/",
   "display": "standalone",
-  "background_color": "#ffffff"
+  "background_color": "#ffffff",
   "theme_color": "#008080",
   "orientation": "portrait",
   "icons": [
