@@ -1,13 +1,26 @@
+// ========== FIREBASE SETUP ==========
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// THEME — follows system preference
+const firebaseConfig = {
+  authDomain: "felix-portfolio-8b3a8.firebaseapp.com",
+  projectId: "felix-portfolio-8b3a8",
+  storageBucket: "felix-portfolio-8b3a8.firebasestorage.app",
+  messagingSenderId: "439075265698",
+  appId: "1:439075265698:web:058c014a4f4c32a9444bfb"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+
+// ========== THEME ==========
 const savedTheme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
 document.documentElement.setAttribute('data-theme', savedTheme);
-
 window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', e => {
     document.documentElement.setAttribute('data-theme', e.matches ? 'light' : 'dark');
 });
 
-// PRICING MODAL
+// ========== PRICING MODAL ==========
 const pricingBackdrop = document.getElementById('pricingBackdrop');
 const pricingClose    = document.getElementById('pricingClose');
 const navPricingBtn   = document.getElementById('navPricingBtn');
@@ -32,91 +45,116 @@ arcPricingBtn?.addEventListener('click', (e) => {
     setTimeout(openPricing, 150);
 });
 pricingClose?.addEventListener('click', closePricing);
-
 pricingBackdrop?.addEventListener('click', (e) => {
     if (e.target === pricingBackdrop) closePricing();
 });
-
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && pricingBackdrop.classList.contains('open')) closePricing();
 });
 
-
-// SMOOTH SCROLL
+// ========== SMOOTH SCROLL ==========
 document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function(e) {
         e.preventDefault();
         const targetId = this.getAttribute('href');
-        if(targetId === '#') return;
+        if (targetId === '#') return;
         const target = document.querySelector(targetId);
-        if(target) window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
+        if (target) window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
     });
 });
 
-// CONTACT FORM
+// ========== CONTACT FORM ==========
 document.getElementById("contactForm").addEventListener("submit", function(e) {
     e.preventDefault();
     emailjs.send("service_p7ghusi", "template_5vusssu", {
-        name: document.getElementById("name").value,
-        email: document.getElementById("email").value,
+        name:    document.getElementById("name").value,
+        email:   document.getElementById("email").value,
         subject: document.getElementById("subject").value,
         message: document.getElementById("message").value
-    }).then(() => { alert("Message sent successfully!"); this.reset(); }).catch(() => alert("Failed to send. Try again."));
+    }).then(() => { alert("Message sent successfully!"); this.reset(); })
+      .catch(() => alert("Failed to send. Try again."));
 });
 
-// TESTIMONIAL SLIDER
-const sheetURL = "https://script.google.com/macros/s/AKfycbwTAaZmkE4-OrSm-r7LDN1D8YQ1EVeBjZ7eHFJfDjITLuUOJhcSlKxsgD8BPZIyFQ2S/exec";
-const trackEl = document.getElementById('testimonialTrack');
-const prevSlideBtn = document.getElementById('prevBtn');
-const nextSlideBtn = document.getElementById('nextBtn');
+// ========== TESTIMONIAL SLIDER ==========
+const trackEl        = document.getElementById('testimonialTrack');
+const prevSlideBtn   = document.getElementById('prevBtn');
+const nextSlideBtn   = document.getElementById('nextBtn');
 const dotsContainerEl = document.getElementById('sliderDots');
 let testimonials = [], currentSlide = 0, autoSlideInterval = null;
 
 function getAvatarIcon(name) {
     const icons = ["fa-user-astronaut","fa-user-ninja","fa-user-secret","fa-user-tie","fa-user-circle","fa-user-graduate","fa-user-edit","fa-user-check","fa-brush","fa-palette"];
-    if(!name) return "fa-user-astronaut";
+    if (!name) return "fa-user-astronaut";
     let hash = 0;
-    for(let i=0;i<name.length;i++) hash = ((hash<<5)-hash)+name.charCodeAt(i);
-    return icons[Math.abs(hash)%icons.length];
+    for (let i = 0; i < name.length; i++) hash = ((hash << 5) - hash) + name.charCodeAt(i);
+    return icons[Math.abs(hash) % icons.length];
+}
+
+function escapeHtml(s) {
+    if (!s) return '';
+    return s.replace(/[&<>]/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;' }[m]));
 }
 
 function buildSlides() {
-    if(!testimonials.length) { trackEl.innerHTML='<div class="testimonial-slide"><div class="testimonial-card"><p>No testimonials yet.</p></div></div>'; dotsContainerEl.innerHTML=''; return; }
-    trackEl.innerHTML='';
-    testimonials.forEach(t=>{
-        const stars='★'.repeat(t.rating||0)+'☆'.repeat(5-(t.rating||0));
-        const icon=`fas ${getAvatarIcon(t.name)}`;
-        trackEl.innerHTML+=`<div class="testimonial-slide"><div class="testimonial-card"><div class="testimonial-rating">${stars}</div><p class="testimonial-content">${escapeHtml(t.text||'Amazing work!')}</p><div class="testimonial-author"><div class="author-avatar"><i class="${icon} avatar-icon"></i></div><div class="author-info"><h4>${escapeHtml(t.name||'Client')}</h4><p>${escapeHtml(t.company||'Happy Client')}</p></div></div></div></div>`;
+    if (!testimonials.length) {
+        trackEl.innerHTML = '<div class="testimonial-slide"><div class="testimonial-card"><p>No testimonials yet.</p></div></div>';
+        dotsContainerEl.innerHTML = '';
+        return;
+    }
+    trackEl.innerHTML = '';
+    testimonials.forEach(t => {
+        const stars = '★'.repeat(t.rating || 0) + '☆'.repeat(5 - (t.rating || 0));
+        const icon  = `fas ${getAvatarIcon(t.name)}`;
+        trackEl.innerHTML += `<div class="testimonial-slide"><div class="testimonial-card"><div class="testimonial-rating">${stars}</div><p class="testimonial-content">${escapeHtml(t.text || 'Amazing work!')}</p><div class="testimonial-author"><div class="author-avatar"><i class="${icon} avatar-icon"></i></div><div class="author-info"><h4>${escapeHtml(t.name || 'Client')}</h4><p>${escapeHtml(t.company || 'Happy Client')}</p></div></div></div></div>`;
     });
-    updateSliderPosition(); createDots();
+    updateSliderPosition();
+    createDots();
 }
 
-function escapeHtml(s){ if(!s) return ''; return s.replace(/[&<>]/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;' }[m])); }
-function updateSliderPosition(){ if(testimonials.length) trackEl.style.transform=`translateX(-${currentSlide*100}%)`; updateDotsActive(); }
-function createDots(){ dotsContainerEl.innerHTML=''; testimonials.forEach((_,i)=>{ const dot=document.createElement('div'); dot.className='dot'+(i===currentSlide?' active':''); dot.addEventListener('click',()=>{ goToSlide(i); resetAutoPlay(); }); dotsContainerEl.appendChild(dot); }); }
-function updateDotsActive(){ document.querySelectorAll('.dot').forEach((d,i)=>{ d.classList.toggle('active',i===currentSlide); }); }
-function goToSlide(i){ if(!testimonials.length) return; currentSlide=(i+testimonials.length)%testimonials.length; updateSliderPosition(); }
-function nextSlide(){ goToSlide(currentSlide+1); resetAutoPlay(); }
-function prevSlide(){ goToSlide(currentSlide-1); resetAutoPlay(); }
-function startAutoPlay(){ if(autoSlideInterval) clearInterval(autoSlideInterval); if(testimonials.length>1) autoSlideInterval=setInterval(nextSlide,5500); }
-function resetAutoPlay(){ if(autoSlideInterval) clearInterval(autoSlideInterval); startAutoPlay(); }
-function stopAutoPlay(){ if(autoSlideInterval) clearInterval(autoSlideInterval); autoSlideInterval=null; }
+function updateSliderPosition() {
+    if (testimonials.length) trackEl.style.transform = `translateX(-${currentSlide * 100}%)`;
+    updateDotsActive();
+}
+function createDots() {
+    dotsContainerEl.innerHTML = '';
+    testimonials.forEach((_, i) => {
+        const dot = document.createElement('div');
+        dot.className = 'dot' + (i === currentSlide ? ' active' : '');
+        dot.addEventListener('click', () => { goToSlide(i); resetAutoPlay(); });
+        dotsContainerEl.appendChild(dot);
+    });
+}
+function updateDotsActive() {
+    document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === currentSlide));
+}
+function goToSlide(i)  { if (!testimonials.length) return; currentSlide = (i + testimonials.length) % testimonials.length; updateSliderPosition(); }
+function nextSlide()   { goToSlide(currentSlide + 1); resetAutoPlay(); }
+function prevSlide()   { goToSlide(currentSlide - 1); resetAutoPlay(); }
+function startAutoPlay() { if (autoSlideInterval) clearInterval(autoSlideInterval); if (testimonials.length > 1) autoSlideInterval = setInterval(nextSlide, 5500); }
+function resetAutoPlay() { if (autoSlideInterval) clearInterval(autoSlideInterval); startAutoPlay(); }
 
-prevSlideBtn?.addEventListener('click',()=>{ prevSlide(); resetAutoPlay(); });
-nextSlideBtn?.addEventListener('click',()=>{ nextSlide(); resetAutoPlay(); });
+prevSlideBtn?.addEventListener('click', () => { prevSlide(); resetAutoPlay(); });
+nextSlideBtn?.addEventListener('click', () => { nextSlide(); resetAutoPlay(); });
 
-async function loadTestimonials(){ try{ const resp=await fetch(sheetURL); const data=await resp.json(); if(Array.isArray(data)&&data.length) testimonials=data.filter(t=>t.text?.trim()); if(!testimonials.length) throw new Error(); }catch(e){ testimonials=
-    [{name:" Jecinter ",company:"house essentials ✨️ ",text:"I’m really happy with the project delivered. He was patient, creative, and very attentive to details. Any changes I requested were handled quickly and professionally. The end result was better than I imagined.",rating:5},
-        {name:"George ",company:"Nyakwere furnitures",text:"timely delivery 👏 with mockups quit impressed with his job Working with James (FX Graphics) was smooth and professional. He delivered clean, high-quality designs and understood exactly what I wanted without stress. The work was done on time and the results spoke for themselves. If you want serious graphics, James is the guy.",rating:5}];
-     } buildSlides(); startAutoPlay(); }
-
-const sliderContainerDiv = document.querySelector('.testimonial-slider-container');
-if(sliderContainerDiv){ sliderContainerDiv.addEventListener('mouseenter',stopAutoPlay); sliderContainerDiv.addEventListener('mouseleave',startAutoPlay); }
+async function loadTestimonials() {
+    try {
+        const snapshot = await getDocs(collection(db, 'testimonials'));
+        testimonials = snapshot.docs.map(doc => doc.data()).filter(t => t.text?.trim());
+        if (!testimonials.length) throw new Error();
+    } catch(e) {
+        testimonials = [
+            { name: "Jecinter", company: "house essentials ✨️", text: "I'm really happy with the project delivered...", rating: 5 },
+            { name: "George",   company: "Nyakwere furnitures",  text: "timely delivery 👏 with mockups...", rating: 5 }
+        ];
+    }
+    buildSlides();
+    startAutoPlay();
+}
 
 // ========== FLOATING ARC MENU ==========
-const arcFab = document.getElementById('arcFab');
+const arcFab     = document.getElementById('arcFab');
 const arcMainBtn = document.getElementById('arcMainBtn');
-const arcIconEl = document.getElementById('arcIcon');
+const arcIconEl  = document.getElementById('arcIcon');
 let arcOpen = false;
 const ARC_RADIUS = 92;
 const arcItemEls = document.querySelectorAll('.arc-item');
@@ -124,25 +162,24 @@ const arcItemEls = document.querySelectorAll('.arc-item');
 function getArcAngles() {
     const rect = arcFab.getBoundingClientRect();
     const cx = rect.left + rect.width / 2;
-    const cy = rect.top + rect.height / 2;
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
+    const cy = rect.top  + rect.height / 2;
+    const vw = window.innerWidth, vh = window.innerHeight;
     const onRight  = cx > vw / 2;
     const onBottom = cy > vh / 2;
-    if (onBottom && onRight)  return { start: -180, end: -90  };
-    if (onBottom && !onRight) return { start: -90,  end: 0    };
-    if (!onBottom && onRight) return { start: 90,   end: 180  };
-    return                           { start: 0,    end: 90   };
+    if (onBottom && onRight)  return { start: -180, end: -90 };
+    if (onBottom && !onRight) return { start: -90,  end: 0   };
+    if (!onBottom && onRight) return { start: 90,   end: 180 };
+    return                           { start: 0,    end: 90  };
 }
 
 function positionArcItems() {
     const { start, end } = getArcAngles();
     arcItemEls.forEach((item, idx) => {
-        const t = idx / (arcItemEls.length - 1);
+        const t     = idx / (arcItemEls.length - 1);
         const angle = start + t * (end - start);
-        const rad = angle * Math.PI / 180;
-        const dx = Math.cos(rad) * ARC_RADIUS;
-        const dy = Math.sin(rad) * ARC_RADIUS;
+        const rad   = angle * Math.PI / 180;
+        const dx    = Math.cos(rad) * ARC_RADIUS;
+        const dy    = Math.sin(rad) * ARC_RADIUS;
         item.setAttribute('data-dx', dx);
         item.setAttribute('data-dy', dy);
         const scale = arcOpen ? 1 : 0.5;
@@ -150,21 +187,12 @@ function positionArcItems() {
     });
 }
 
-function updateArcTransforms() {
-    positionArcItems();
-}
-
 function toggleArc(e) {
     if (e && e.stopPropagation) e.stopPropagation();
     arcOpen = !arcOpen;
-    if (arcOpen) {
-        arcFab.classList.add('expanded');
-        arcIconEl.className = 'fas fa-times';
-    } else {
-        arcFab.classList.remove('expanded');
-        arcIconEl.className = 'fas fa-plus';
-    }
-    updateArcTransforms();
+    arcFab.classList.toggle('expanded', arcOpen);
+    arcIconEl.className = arcOpen ? 'fas fa-times' : 'fas fa-plus';
+    positionArcItems();
 }
 
 arcItemEls.forEach(item => {
@@ -185,7 +213,7 @@ document.addEventListener('pointerdown', (e) => {
         arcOpen = false;
         arcFab.classList.remove('expanded');
         arcIconEl.className = 'fas fa-plus';
-        updateArcTransforms();
+        positionArcItems();
     }
 });
 
@@ -193,32 +221,28 @@ let dragActive = false, dragMoved = false;
 let dragStartX, dragStartY, dragStartLeft, dragStartTop;
 
 function setArcPos(left, top) {
-    arcFab.style.left   = left + 'px';
-    arcFab.style.top    = top  + 'px';
-    arcFab.style.right  = 'auto';
-    arcFab.style.bottom = 'auto';
+    arcFab.style.left = left + 'px'; arcFab.style.top = top + 'px';
+    arcFab.style.right = 'auto'; arcFab.style.bottom = 'auto';
 }
 
 function snapToEdges(left, top, vw, vh, w, h) {
     let newLeft = (left + w / 2 < vw / 2) ? 12 : vw - w - 12;
     let newTop  = (top  + h / 2 < vh / 2) ? 12 : vh - h - 12;
-    newLeft = Math.min(Math.max(newLeft, 8), vw - w - 8);
-    newTop  = Math.min(Math.max(newTop,  8), vh - h - 8);
-    return { left: newLeft, top: newTop };
+    return {
+        left: Math.min(Math.max(newLeft, 8), vw - w - 8),
+        top:  Math.min(Math.max(newTop,  8), vh - h - 8)
+    };
 }
 
 function onDragStart(e) {
     if (e.target.closest('.arc-item') && arcOpen) return;
     e.preventDefault();
-    dragActive = true;
-    dragMoved  = false;
+    dragActive = true; dragMoved = false;
     const clientX = e.clientX ?? e.touches?.[0].clientX ?? 0;
     const clientY = e.clientY ?? e.touches?.[0].clientY ?? 0;
-    dragStartX = clientX;
-    dragStartY = clientY;
+    dragStartX = clientX; dragStartY = clientY;
     const rect = arcFab.getBoundingClientRect();
-    dragStartLeft = rect.left;
-    dragStartTop  = rect.top;
+    dragStartLeft = rect.left; dragStartTop = rect.top;
     setArcPos(dragStartLeft, dragStartTop);
 }
 
@@ -226,204 +250,116 @@ function onDragMove(e) {
     if (!dragActive) return;
     const clientX = e.clientX ?? e.touches?.[0].clientX ?? 0;
     const clientY = e.clientY ?? e.touches?.[0].clientY ?? 0;
-    const dx = Math.abs(clientX - dragStartX);
-    const dy = Math.abs(clientY - dragStartY);
-    if (dx > 8 || dy > 8) {
+    if (Math.abs(clientX - dragStartX) > 8 || Math.abs(clientY - dragStartY) > 8) {
         dragMoved = true;
         e.preventDefault();
-        let newLeft = dragStartLeft + (clientX - dragStartX);
-        let newTop  = dragStartTop  + (clientY - dragStartY);
         const vw = window.innerWidth, vh = window.innerHeight;
-        const w  = arcFab.offsetWidth, h = arcFab.offsetHeight;
-        newLeft = Math.min(Math.max(newLeft, 5), vw - w - 5);
-        newTop  = Math.min(Math.max(newTop,  5), vh - h - 5);
-        setArcPos(newLeft, newTop);
+        const w  = arcFab.offsetWidth,  h = arcFab.offsetHeight;
+        setArcPos(
+            Math.min(Math.max(dragStartLeft + (clientX - dragStartX), 5), vw - w - 5),
+            Math.min(Math.max(dragStartTop  + (clientY - dragStartY), 5), vh - h - 5)
+        );
     }
 }
 
 function onDragEnd(e) {
     if (!dragActive) return;
     dragActive = false;
-    if (!dragMoved) {
-        toggleArc(e);
-        return;
-    }
+    if (!dragMoved) { toggleArc(e); return; }
     const rect = arcFab.getBoundingClientRect();
     const vw = window.innerWidth, vh = window.innerHeight;
-    const w  = arcFab.offsetWidth,  h = arcFab.offsetHeight;
-    const snapped = snapToEdges(rect.left, rect.top, vw, vh, w, h);
+    const snapped = snapToEdges(rect.left, rect.top, vw, vh, arcFab.offsetWidth, arcFab.offsetHeight);
     setArcPos(snapped.left, snapped.top);
-    if (arcOpen) updateArcTransforms();
+    if (arcOpen) positionArcItems();
 }
 
 arcMainBtn.addEventListener('mousedown', onDragStart);
 window.addEventListener('mousemove', onDragMove);
 window.addEventListener('mouseup', onDragEnd);
-
 arcMainBtn.addEventListener('touchstart', onDragStart, { passive: false });
 window.addEventListener('touchmove', onDragMove, { passive: false });
 window.addEventListener('touchend', onDragEnd);
-
 window.addEventListener('resize', () => {
     const rect = arcFab.getBoundingClientRect();
-    const vw = window.innerWidth, vh = window.innerHeight;
-    const w  = arcFab.offsetWidth,  h = arcFab.offsetHeight;
-    const snapped = snapToEdges(rect.left, rect.top, vw, vh, w, h);
+    const snapped = snapToEdges(rect.left, rect.top, window.innerWidth, window.innerHeight, arcFab.offsetWidth, arcFab.offsetHeight);
     setArcPos(snapped.left, snapped.top);
     positionArcItems();
 });
-
 positionArcItems();
+
+// ========== SIMPLE LIGHTBOX ==========
+const lightbox = document.createElement('div');
+lightbox.id = 'lightbox';
+lightbox.style.cssText = `
+    position:fixed;inset:0;z-index:9999;
+    background:rgba(0,0,0,0.92);
+    display:flex;align-items:center;justify-content:center;
+    opacity:0;pointer-events:none;
+    transition:opacity 0.25s ease;
+    padding:20px;cursor:zoom-out;
+`;
+lightbox.innerHTML = `<img id="lightboxImg" style="max-width:100%;max-height:90vh;border-radius:10px;object-fit:contain;display:block;">`;
+document.body.appendChild(lightbox);
+lightbox.addEventListener('click', closeLightbox);
+
+function openLightbox(src) {
+    document.getElementById('lightboxImg').src = src;
+    lightbox.style.opacity = '1';
+    lightbox.style.pointerEvents = 'all';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+    lightbox.style.opacity = '0';
+    lightbox.style.pointerEvents = 'none';
+    document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeLightbox();
+});
 
 // ========== PINTEREST GALLERY ==========
 let DESIGNS = [];
 
-fetch('designs.json')
-    .then(response => response.json())
-    .then(data => {
-        DESIGNS = data;
+async function loadDesigns() {
+    try {
+        const snapshot = await getDocs(collection(db, 'designs'));
+        DESIGNS = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         renderGallery();
-    })
-    .catch(error => console.error('Error loading designs:', error));
+    } catch (err) {
+        console.error('Error loading designs:', err);
+    }
+}
+loadDesigns();
 
 let currentFilter = 'all';
-let activeExpandId = null;
-
 const pinGrid      = document.getElementById('pinGrid');
 const galleryCount = document.getElementById('galleryCount');
 const filterBtns   = document.querySelectorAll('.filter-btn');
 
 function getFiltered() {
-    return currentFilter === 'all'
-        ? DESIGNS
-        : DESIGNS.filter(d => d.category === currentFilter);
+    return currentFilter === 'all' ? DESIGNS : DESIGNS.filter(d => d.category === currentFilter);
 }
 
 function buildPin(d) {
     const item = document.createElement('div');
     item.className = 'pin-item';
     item.dataset.id = d.id;
-    item.dataset.category = d.category;
-
-    const imgHtml = d.image
-        ? `<img class="pin-img" src="${d.image}" alt="${d.title}" style="height:${d.height}px;">`
-        : `<div class="pin-placeholder" style="height:${d.height}px;"><i class="fas ${d.icon}"></i></div>`;
-
-    item.innerHTML = `
-        ${imgHtml}
-        <div class="pin-overlay">
-            <div class="pin-overlay-title">${d.title}</div>
-            <div class="pin-overlay-tag">${d.category}</div>
-        </div>`;
-
-    item.addEventListener('click', () => toggleExpand(d));
+    item.dataset.category = d.category || '';
+    const imgSrc = d.image || '';
+    item.innerHTML = imgSrc
+        ? `<img class="pin-img" src="${imgSrc}" alt="${d.title || ''}" style="height:${d.height || 200}px;">
+           <div class="pin-overlay"><div class="pin-overlay-title">${d.title || ''}</div><div class="pin-overlay-tag">${d.category || ''}</div></div>`
+        : `<div class="pin-placeholder" style="height:${d.height || 200}px;"><i class="fas ${d.icon || 'fa-image'}"></i></div>`;
+    if (imgSrc) item.addEventListener('click', () => openLightbox(imgSrc));
     return item;
 }
 
-// ✅ FIX 1 — uses .pin-expand-close class, close button always finds correct element
-function buildExpandRow(d) {
-    const filtered = getFiltered();
-    const related  = filtered.filter(r => r.category === d.category && r.id !== d.id).slice(0, 8);
-
-    const relatedHtml = related.length
-        ? `<div class="pin-related">
-            <div class="pin-related-label">Related Designs</div>
-            <div class="pin-related-strip">
-                ${related.map(r => `
-                    <div class="pin-related-thumb" data-id="${r.id}">
-                        ${r.image
-                            ? `<img src="${r.image}" alt="${r.title}">`
-                            : `<i class="fas ${r.icon}"></i>`}
-                    </div>`).join('')}
-            </div>
-           </div>`
-        : '';
-
-    const toolsHtml = d.tools.map(t => `<span class="pin-expand-tool">${t}</span>`).join('');
-
-    const expandImgHtml = d.image
-        ? `<div class="pin-expand-img-wrap"><img src="${d.image}" alt="${d.title}"></div>`
-        : `<div class="pin-expand-img-wrap"><div class="pin-expand-placeholder" style="min-height:280px;"><i class="fas ${d.icon}"></i></div></div>`;
-
-    const waMsg = encodeURIComponent(`Hi Felix, I saw your "${d.title}" design and I'd love something similar. Can we talk?`);
-
-    const row = document.createElement('div');
-    row.className = 'pin-expand-row open';
-    row.dataset.expandFor = d.id;
-    row.innerHTML = `
-        <div class="pin-expand-panel">
-            <button class="pin-expand-close"><i class="fas fa-times"></i></button>
-            ${expandImgHtml}
-            <div class="pin-expand-info">
-                <div class="pin-expand-tag">${d.category} · ${d.year}</div>
-                <div class="pin-expand-title">${d.title}</div>
-                <div class="pin-expand-desc">${d.description}</div>
-                <div class="pin-expand-tools">${toolsHtml}</div>
-                <a href="https://wa.me/254106723905?text=${waMsg}" target="_blank" class="pin-expand-cta">
-                    <i class="fab fa-whatsapp"></i> Order Similar
-                </a>
-                ${relatedHtml}
-            </div>
-        </div>`;
-
-    // ✅ class selector — always targets the right button
-    row.querySelector('.pin-expand-close').addEventListener('click', (e) => {
-        e.stopPropagation();
-        closeExpand();
-        closeGalleryExpand();
-    });
-
-    // NEW
-row.querySelectorAll('.pin-related-thumb').forEach(thumb => {
-    thumb.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const relId  = parseInt(thumb.dataset.id);
-        const relDes = DESIGNS.find(x => x.id === relId);
-        if (!relDes) return;
-
-        // Check which grid this expand row is sitting in
-        const inGallery = !!galleryPinGrid?.contains(row);
-        if (inGallery) {
-            toggleGalleryExpand(relDes);
-        } else {
-            toggleExpand(relDes);
-        }
-    });
-});
-    return row;
-}
-
-// ✅ FIX 2 — two separate clean close functions
-function closeExpand() {
-    const existing = pinGrid.querySelector('.pin-expand-row');
-    if (existing) existing.remove();
-    activeExpandId = null;
-}
-
-function closeGalleryExpand() {
-    const existing = galleryPinGrid?.querySelector('.pin-expand-row');
-    if (existing) existing.remove();
-    galleryExpand = null;
-}
-
-function toggleExpand(d) {
-    if (activeExpandId === d.id) { closeExpand(); return; }
-    closeExpand();
-    activeExpandId = d.id;
-    const clickedPin = pinGrid.querySelector(`.pin-item[data-id="${d.id}"]`);
-    if (!clickedPin) return;
-    const expandRow = buildExpandRow(d);
-    clickedPin.after(expandRow);
-    setTimeout(() => {
-        expandRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }, 80);
-}
-
 function renderGallery() {
-    closeExpand();
-    const filtered = getFiltered();
     pinGrid.innerHTML = '';
-    if (filtered.length === 0) {
+    const filtered = getFiltered();
+    if (!filtered.length) {
         pinGrid.innerHTML = '<div class="pin-empty"><i class="fas fa-search"></i><p>No projects in this category yet.</p></div>';
         galleryCount.textContent = '0 projects';
         return;
@@ -432,10 +368,7 @@ function renderGallery() {
         const pin = buildPin(d);
         pin.style.opacity = '0';
         pinGrid.appendChild(pin);
-        setTimeout(() => {
-            pin.style.opacity = '1';
-            pin.classList.add('fade-in');
-        }, i * 40);
+        setTimeout(() => { pin.style.opacity = '1'; pin.classList.add('fade-in'); }, i * 40);
     });
     galleryCount.textContent = `${filtered.length} project${filtered.length !== 1 ? 's' : ''}`;
 }
@@ -451,7 +384,6 @@ filterBtns.forEach(btn => {
 
 // ========== TOOLS BAR ANIMATION ==========
 const toolCards = document.querySelectorAll('.tool-card[data-pct]');
-
 toolCards.forEach(card => {
     const fill = card.querySelector('.tool-bar-fill');
     if (fill) fill.style.width = '0%';
@@ -463,63 +395,46 @@ toolCards.forEach(card => {
 const barObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
-            const card  = entry.target;
-            const pct   = card.getAttribute('data-pct');
-            const fill  = card.querySelector('.tool-bar-fill');
-            const siblings = Array.from(card.parentElement.querySelectorAll('.tool-card'));
-            const idx = siblings.indexOf(card);
-            const delay = idx * 100;
+            const card = entry.target;
+            const pct  = card.getAttribute('data-pct');
+            const fill = card.querySelector('.tool-bar-fill');
+            const idx  = Array.from(card.parentElement.querySelectorAll('.tool-card')).indexOf(card);
             setTimeout(() => {
                 card.style.opacity = '1';
                 card.style.transform = 'translateY(0)';
-                setTimeout(() => {
-                    if (fill) fill.style.width = pct + '%';
-                }, 200);
-            }, delay);
+                setTimeout(() => { if (fill) fill.style.width = pct + '%'; }, 200);
+            }, idx * 100);
             barObserver.unobserve(card);
         }
     });
 }, { threshold: 0.15 });
-
 toolCards.forEach(card => barObserver.observe(card));
 
 // ========== 3 PAGE STRUCTURE ==========
-const galleryView = document.getElementById('galleryView');
-const searchView  = document.getElementById('searchView');
-const galleryBack = document.getElementById('galleryBack');
-const searchBack  = document.getElementById('searchBack');
-const openSearch  = document.getElementById('openSearch');
-const arcGalleryBtn = document.getElementById('arcGalleryBtn');
-const searchInput   = document.getElementById('searchInput');
-const searchClear   = document.getElementById('searchClear');
+const galleryView       = document.getElementById('galleryView');
+const searchView        = document.getElementById('searchView');
+const galleryBack       = document.getElementById('galleryBack');
+const searchBack        = document.getElementById('searchBack');
+const openSearch        = document.getElementById('openSearch');
+const arcGalleryBtn     = document.getElementById('arcGalleryBtn');
+const searchInput       = document.getElementById('searchInput');
+const searchClear       = document.getElementById('searchClear');
 const searchSuggestions = document.getElementById('searchSuggestions');
 const galleryPinGrid    = document.getElementById('galleryPinGrid');
 const loadMoreBtn       = document.getElementById('loadMoreBtn');
 const loadMoreWrap      = document.getElementById('loadMoreWrap');
 
 const PAGE_SIZE = 8;
-let galleryFilter  = 'all';
-let galleryPage    = 0;
-let galleryExpand  = null;
+let galleryFilter = 'all';
+let galleryPage   = 0;
 
-function openView(view) {
-    view.classList.add('active');
-    document.body.style.overflow = 'hidden';
-}
-
-function closeView(view) {
-    view.classList.remove('active');
-    document.body.style.overflow = '';
-}
+function openView(view) { view.classList.add('active'); document.body.style.overflow = 'hidden'; }
+function closeView(view) { view.classList.remove('active'); document.body.style.overflow = ''; }
 
 arcGalleryBtn?.addEventListener('click', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+    e.preventDefault(); e.stopPropagation();
     if (arcOpen) toggleArc(e);
-    setTimeout(() => {
-        openView(galleryView);
-        renderGalleryView();
-    }, 150);
+    setTimeout(() => { openView(galleryView); renderGalleryView(); }, 150);
 });
 
 galleryBack?.addEventListener('click', () => closeView(galleryView));
@@ -527,24 +442,20 @@ searchBack?.addEventListener('click', () => {
     closeView(searchView);
     searchInput.value = '';
     searchClear.classList.remove('visible');
-    renderSuggestions('');
+    searchSuggestions.innerHTML = '';
 });
-
 openSearch?.addEventListener('click', () => {
     openView(searchView);
+    searchSuggestions.innerHTML = '';
     setTimeout(() => searchInput.focus(), 300);
-    renderSuggestions('');
 });
 
 function getGalleryFiltered() {
-    return galleryFilter === 'all'
-        ? DESIGNS
-        : DESIGNS.filter(d => d.category === galleryFilter);
+    return galleryFilter === 'all' ? DESIGNS : DESIGNS.filter(d => d.category === galleryFilter);
 }
 
 function renderGalleryView() {
     galleryPage = 0;
-    galleryExpand = null;
     galleryPinGrid.innerHTML = '';
     loadMoreWrap.style.display = 'flex';
     renderGalleryPage();
@@ -552,70 +463,35 @@ function renderGalleryView() {
 
 function renderGalleryPage() {
     const filtered = getGalleryFiltered();
-    const start = galleryPage * PAGE_SIZE;
-    const slice = filtered.slice(start, start + PAGE_SIZE);
-
+    const slice = filtered.slice(galleryPage * PAGE_SIZE, (galleryPage + 1) * PAGE_SIZE);
     slice.forEach((d, i) => {
         const pin = buildGalleryPin(d);
         pin.style.opacity = '0';
         galleryPinGrid.appendChild(pin);
-        setTimeout(() => {
-            pin.style.opacity = '1';
-            pin.classList.add('fade-in');
-        }, i * 40);
+        setTimeout(() => { pin.style.opacity = '1'; pin.classList.add('fade-in'); }, i * 40);
     });
-
     galleryPage++;
-
-    if (galleryPage * PAGE_SIZE >= filtered.length) {
-        loadMoreWrap.style.display = 'none';
-    }
+    if (galleryPage * PAGE_SIZE >= filtered.length) loadMoreWrap.style.display = 'none';
 }
 
 function buildGalleryPin(d) {
     const item = document.createElement('div');
     item.className = 'pin-item';
     item.dataset.id = d.id;
-
-    const imgHtml = d.image
-        ? `<img class="pin-img" src="${d.image}" alt="${d.title}" style="height:${d.height}px;">`
-        : `<div class="pin-placeholder" style="height:${d.height}px;"><i class="fas ${d.icon}"></i></div>`;
-
-    item.innerHTML = `
-        ${imgHtml}
-        <div class="pin-overlay">
-            <div class="pin-overlay-title">${d.title}</div>
-            <div class="pin-overlay-tag">${d.category}</div>
-        </div>`;
-
-    item.addEventListener('click', () => toggleGalleryExpand(d));
+    const imgSrc = d.image || '';
+    item.innerHTML = imgSrc
+        ? `<img class="pin-img" src="${imgSrc}" alt="${d.title || ''}" style="height:${d.height || 200}px;">
+           <div class="pin-overlay"><div class="pin-overlay-title">${d.title || ''}</div><div class="pin-overlay-tag">${d.category || ''}</div></div>`
+        : `<div class="pin-placeholder" style="height:${d.height || 200}px;"><i class="fas ${d.icon || 'fa-image'}"></i></div>`;
+    if (imgSrc) item.addEventListener('click', () => openLightbox(imgSrc));
     return item;
-}
-
-// ✅ FIX 3 — resets both trackers, no ghost expand rows
-function toggleGalleryExpand(d) {
-    closeGalleryExpand();
-    closeExpand();
-
-    if (galleryExpand === d.id) return;
-
-    galleryExpand = d.id;
-    const clickedPin = galleryPinGrid.querySelector(`.pin-item[data-id="${d.id}"]`);
-    if (!clickedPin) return;
-
-    const expandRow = buildExpandRow(d);
-    clickedPin.after(expandRow);
-    setTimeout(() => {
-        expandRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }, 80);
 }
 
 loadMoreBtn?.addEventListener('click', renderGalleryPage);
 
 document.querySelectorAll('.gallery-filter-bar .filter-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-        document.querySelectorAll('.gallery-filter-bar .filter-btn')
-            .forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.gallery-filter-bar .filter-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         galleryFilter = btn.dataset.filter;
         renderGalleryView();
@@ -636,53 +512,89 @@ searchClear?.addEventListener('click', () => {
 });
 
 function renderSuggestions(query) {
-    const q = query.toLowerCase();
-    const results = q.length === 0
-        ? DESIGNS.slice(0, 12)
-        : DESIGNS.filter(d =>
-            d.title.toLowerCase().includes(q) ||
-            d.category.toLowerCase().includes(q) ||
-            (d.description && d.description.toLowerCase().includes(q)) ||
-            (d.tools && d.tools.some(t => t.toLowerCase().includes(q)))
-        );
+    const q = query.toLowerCase().trim();
 
-    if (results.length === 0) {
+    if (!q.length) {
+    searchSuggestions.innerHTML = '';
+    return;
+}
+
+    // Score each design
+    const scored = DESIGNS.map(d => {
+        const title    = (d.title    || '').toLowerCase();
+        const category = (d.category || '').toLowerCase();
+        const desc     = (d.description || '').toLowerCase();
+        let score = 0;
+
+        // Exact match scores highest
+        if (title.startsWith(q))    score += 10;
+        if (title.includes(q))      score += 6;
+        if (category.includes(q))   score += 4;
+        if (desc.includes(q))       score += 2;
+
+        // Fuzzy — check if all characters appear in order
+        if (score === 0 && fuzzyMatch(q, title))    score += 3;
+        if (score === 0 && fuzzyMatch(q, category)) score += 1;
+
+        return { d, score };
+    })
+    .filter(x => x.score > 0)
+    .sort((a, b) => b.score - a.score);
+
+    if (!scored.length) {
         searchSuggestions.innerHTML = `
             <div class="search-empty">
                 <i class="fas fa-search"></i>
-                <p>No designs found for "${query}"</p>
+                <p>No designs found for "<strong>${q}</strong>"</p>
             </div>`;
         return;
     }
 
-    searchSuggestions.innerHTML = results.map(d => `
+    searchSuggestions.innerHTML = scored.map(({ d }) => suggestionHTML(d, q)).join('');
+    attachSuggestionClicks();
+}
+
+function fuzzyMatch(query, str) {
+    let qi = 0;
+    for (let i = 0; i < str.length && qi < query.length; i++) {
+        if (str[i] === query[qi]) qi++;
+    }
+    return qi === query.length;
+}
+
+function highlight(text, query) {
+    if (!query) return text;
+    const idx = text.toLowerCase().indexOf(query.toLowerCase());
+    if (idx === -1) return text;
+    return text.slice(0, idx)
+        + `<mark style="background:rgba(0,128,128,0.25);color:var(--primary);border-radius:3px;padding:0 2px;">${text.slice(idx, idx + query.length)}</mark>`
+        + text.slice(idx + query.length);
+}
+
+function suggestionHTML(d, query) {
+    return `
         <div class="suggestion-item" data-id="${d.id}">
             <div class="suggestion-thumb">
                 ${d.image
-                    ? `<img src="${d.image}" alt="${d.title}">`
-                    : `<i class="fas ${d.icon}"></i>`}
+                    ? `<img src="${d.image}" alt="${d.title || ''}">`
+                    : `<i class="fas ${d.icon || 'fa-image'}"></i>`}
             </div>
             <div class="suggestion-info">
-                <div class="suggestion-title">${d.title}</div>
-                <div class="suggestion-category">${d.category}</div>
+                <div class="suggestion-title">${highlight(d.title || '', query)}</div>
+                <div class="suggestion-category">${highlight(d.category || '', query)}</div>
             </div>
-        </div>
-    `).join('');
+        </div>`;
+}
 
+function attachSuggestionClicks() {
     searchSuggestions.querySelectorAll('.suggestion-item').forEach(item => {
         item.addEventListener('click', () => {
-            const id = parseInt(item.dataset.id);
-            const design = DESIGNS.find(d => d.id === id);
+            const design = DESIGNS.find(d => d.id === item.dataset.id);
             if (!design) return;
             closeView(searchView);
             searchInput.value = '';
             searchClear.classList.remove('visible');
-            galleryFilter = design.category;
-            document.querySelectorAll('.gallery-filter-bar .filter-btn').forEach(b => {
-                b.classList.toggle('active', b.dataset.filter === design.category);
-            });
-            renderGalleryView();
-            setTimeout(() => toggleGalleryExpand(design), 400);
+            if (design.image) openLightbox(design.image);
         });
     });
 }
@@ -700,95 +612,55 @@ document.getElementById('toolsBack')?.addEventListener('click', () => {
     closeView(document.getElementById('toolsView'));
 });
 
-// ✅ FIX 4 — called directly, no DOMContentLoaded needed
-loadTestimonials();
-
-//tex to speach
-  let activeSpeech = null;
-
-  function speak(btnEl, text) {
-    // If already speaking, stop
-    if (window.speechSynthesis.speaking) {
-      window.speechSynthesis.cancel();
-      document.querySelectorAll('.listen-btn').forEach(b => {
-        b.textContent = '🔊 Listen';
-        b.classList.remove('speaking');
-      });
-      if (activeSpeech === btnEl) {
-        activeSpeech = null;
-        return;
-      }
-    }
-
-    activeSpeech = btnEl;
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang  = 'en-US';
-    utterance.rate  = 1.0;
-    utterance.pitch = 1;
-
-    // Button state — speaking
-    btnEl.textContent = '⏹ Stop';
-    btnEl.classList.add('speaking');
-
-    utterance.onend = () => {
-      btnEl.textContent = '🔊 Listen';
-      btnEl.classList.remove('speaking');
-      activeSpeech = null;
-    };
-
-    window.speechSynthesis.speak(utterance);
-  }
-// ========== SERVICE WORKER REGISTRATION ==========
-  
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js')
-      .then(() => console.log('SW registered'))
-      .catch(err => console.log('SW failed:', err));
-  }
-
-// ========== FIREBASE PUSH NOTIFICATIONS ==========
-const firebaseConfig = {
-    apiKey: 
-    authDomain: "felix-portfolio-8b3a8.firebaseapp.com",
-    projectId: "felix-portfolio-8b3a8",
-    storageBucket: "felix-portfolio-8b3a8.firebasestorage.app",
-    messagingSenderId: "439075265698",
-    appId: "1:439075265698:web:058c014a4f4c32a9444bfb"
-};
-
-firebase.initializeApp(firebaseConfig);
-const messaging = firebase.messaging();
-
-// Request notification permission
-async function requestNotificationPermission() {
+// ========== SEASONAL CARDS ==========
+async function loadSeasonalCards() {
+    const grid = document.getElementById('seasonalGrid');
+    if (!grid) return;
     try {
-        const permission = await Notification.requestPermission();
-        if (permission === 'granted') {
-            const token = await messaging.getToken({
-                vapidKey: 'BEXAFghi2VaVz5RBCkZmrU-XoKLG4f48EpwOmzC7XkdN9QWcW_oSh-k42hNbRVqqvVQUI3B0hwer2x6EWqlatsM',
-                serviceWorkerRegistration: await navigator.serviceWorker.getRegistration('/felix/firebase-messaging-sw.js')
-            });
-            if (token) {
-                console.log('FCM Token:', token);
-                localStorage.setItem('fcmToken', token);
-            }
-        }
-    } catch (err) {
-        console.error('Notification permission error:', err);
+        const snapshot = await getDocs(collection(db, 'seasonCards'));
+        const cards = snapshot.docs
+            .map(doc => doc.data())
+            .filter(c => c.image)
+            .sort((a, b) => (a.order || 0) - (b.order || 0));
+        if (!cards.length) { document.getElementById('seasonal-cards').style.display = 'none'; return; }
+        grid.innerHTML = cards.map(c => `
+            <div class="seasonal-card">
+                <img src="${c.image}" alt="featured">
+                ${c.text ? `<div class="seasonal-card-text">${c.text}</div>` : ''}
+            </div>`).join('');
+    } catch(e) {
+        const sec = document.getElementById('seasonal-cards');
+        if (sec) sec.style.display = 'none';
     }
 }
+loadSeasonalCards();
 
-// Handle foreground notifications
-messaging.onMessage((payload) => {
-    const { title, body } = payload.notification;
-    if (Notification.permission === 'granted') {
-        new Notification(title, {
-            body,
-            icon: '/felix/icon-192.png',
-            badge: '/felix/icon-192.png'
-        });
+// ========== ABOUT ME CARD ==========
+const aboutBackdrop = document.getElementById('aboutBackdrop');
+const aboutMeBtn    = document.getElementById('aboutMeBtn');
+const aboutClose    = document.getElementById('aboutClose');
+
+aboutMeBtn?.addEventListener('click', () => {
+    aboutBackdrop.classList.add('open');
+    document.body.style.overflow = 'hidden';
+});
+aboutClose?.addEventListener('click', () => {
+    aboutBackdrop.classList.remove('open');
+    document.body.style.overflow = '';
+});
+aboutBackdrop?.addEventListener('click', (e) => {
+    if (e.target === aboutBackdrop) {
+        aboutBackdrop.classList.remove('open');
+        document.body.style.overflow = '';
     }
 });
 
-// Ask for permission after 3 seconds so it doesn't feel aggressive
-setTimeout(requestNotificationPermission, 3000);
+// ========== SERVICE WORKER ==========
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js')
+        .then(() => console.log('SW registered'))
+        .catch(err => console.log('SW failed:', err));
+}
+
+// ========== INIT ==========
+loadTestimonials();

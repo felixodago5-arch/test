@@ -1372,14 +1372,14 @@
             transform: translate(-50%, -50%) scale(1);
         }
 
-        /* Staggered open animations */
+        /* Staggered open animations 
         .floating-arc.expanded .arc-item:nth-child(1) { transition-delay: 0.02s; }
         .floating-arc.expanded .arc-item:nth-child(2) { transition-delay: 0.05s; }
         .floating-arc.expanded .arc-item:nth-child(3) { transition-delay: 0.08s; }
         .floating-arc.expanded .arc-item:nth-child(4) { transition-delay: 0.11s; }
         .floating-arc.expanded .arc-item:nth-child(5) { transition-delay: 0.14s; }
         .floating-arc.expanded .arc-item:nth-child(6) { transition-delay: 0.17s; }
-
+*/
         .update-banner {
   position: sticky;
   top: 0;
