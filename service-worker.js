@@ -1,22 +1,7 @@
-const CACHE_NAME = 'felixjames-v2';
-const ASSETS = [
-  '/test/',
-  '/test/index.html',
-  '/test/style.css',
-  '/test/script.js',
-  '/test/designs.json',
-  '/test/commission.html',
-  '/test/status.html',
-  '/test/icon-192.png',
-  '/test/icon-512.png',
-];
-
 const CACHE_NAME = 'felixjames-v3';
 
-// Install — skip waiting, activate immediately
 self.addEventListener('install', () => self.skipWaiting());
 
-// Activate — delete ALL old caches
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys =>
@@ -26,8 +11,6 @@ self.addEventListener('activate', event => {
   self.clients.claim();
 });
 
-// Fetch — network only, no caching
-// Offline → return skeleton signal for images
 self.addEventListener('fetch', event => {
   if (event.request.destination === 'image') {
     event.respondWith(
@@ -44,7 +27,5 @@ self.addEventListener('fetch', event => {
     );
     return;
   }
-
-  // Everything else — straight network, no interception
   event.respondWith(fetch(event.request));
 });
