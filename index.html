@@ -25,6 +25,7 @@
       navigator.serviceWorker.register('/service-worker.js');
     });
   }
+      navigator.serviceWorker.register('./sw.js')
 </script>
 
 <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
@@ -581,8 +582,6 @@
 </a>
 
 <!-- To this -->
-<script type="module" src="script.js">
-    navigator.serviceWorker.register('./sw.js')
-</script>
+<script type="module" src="script.js"></script>
 </body>
 </html>
