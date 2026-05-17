@@ -22,10 +22,10 @@
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/service-worker.js');
+     navigator.serviceWorker.register('./sw.js');
     });
   }
-      navigator.serviceWorker.register('./sw.js')
+      
 </script>
 
 <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
