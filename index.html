@@ -22,10 +22,9 @@
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-     navigator.serviceWorker.register('./sw.js');
+      navigator.serviceWorker.register('/service-worker.js');
     });
   }
-      
 </script>
 
 <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
@@ -63,9 +62,9 @@
                 <div class="button-strip">
                     <a href="#projects" class="btn">View My Work</a>
                     <a href="commission.html" class="btn btn-outline">Get In Touch</a>
-                  <!--  <button class="btn btn-outline" id="viewToolsBtn" style="max-width:280px; margin-top:10px;">
-                               <i class="fas fa-tools"></i> View My Tools
-                    </button>-->
+                 <button class="btn btn-outline" id="viewToolsBtn" style="max-width:280px; margin-top:10px;">
+                               <i class="fas fa-user"></i> About Me
+                    </button>
                 </div>
             </div>
             <div class="home-visual">
@@ -84,34 +83,7 @@
     </div>
 </section>
 
-    <section id="about">
-  <div class="container">
-    <h2 class="section-title">
-      About Me
-      <button class="listen-btn" onclick="speak(this, document.getElementById('about-text').innerText)">
-        🔊 Listen
-      </button>
-    </h2>
-    <div class="about-content">
-      <div class="about-text">
-        <h3>Designing with Purpose</h3>
-        <div id="about-text">
-          <p>I'm a creative designer focused on building clean, impactful visual experiences. From graphic design to interactive web interfaces, I'm constantly refining my skills and exploring new ways to bring ideas to life.</p>
-          <p>I believe great design should be clear, functional, and engaging. Whether creating brand visuals, digital content, or responsive web experiences, my goal is to craft work that communicates effectively and leaves a lasting impression.</p>
-        </div>
-        <div class="skills">
-          <span class="skill">Brand Identity</span>
-          <span class="skill">Digital Illustration</span>
-          <span class="skill">Typography</span>
-          <span class="skill">Print Design</span>
-        </div>
-      </div>
-      <div class="about-image">
-        <img src="pic47.jpg" alt="Felix James">
-      </div>
-    </div>
-  </div>
-</section>
+ 
    
 
   <!--<section id="projects">
@@ -214,7 +186,7 @@
         <div class="container footer-content">
             <div class="copyright">&copy; 2026 Felix Graphics Studio. All rights reserved.</div>
                        <div class="footer-links">
-                <a href=" https://whatsapp.com/channel/0029VbBAZRc5q08jp8d53u3u"><i class="fab fa-whatsapp"></i></a>
+                <a href="https://wa.me/254106723905" target="_blank"><i class="fab fa-whatsapp"></i></a>
                 <a href="https://www.instagram.com/fx_graphics_studio_?igsh=OWJxbDk4eGNlcXhv"><i class="fab fa-instagram"></i></a>
                 <a href="#"><i class="fab fa-linkedin-in"></i></a>
                 <a href="https://www.tiktok.com/@felixgraphics2?_r=1&_t=ZS-95yEOsHAU2J"><i class="fab fa-tiktok"></i></a>
@@ -231,7 +203,7 @@
         <div class="arc-main" id="arcMainBtn"><i class="fas fa-plus" id="arcIcon"></i></div>
         <div class="arc-items">
             <a href="#home" class="arc-item"><i class="fas fa-home"></i></a>
-            <a href="#about" class="arc-item"><i class="fas fa-user"></i></a>
+            <!--<a href="#about" class="arc-item"><i class="fas fa-user"></i></a>-->
             <a href="#testimonials" class="arc-item"><i class="fas fa-comment-dots"></i></a>
             <a href="#contact" class="arc-item"><i class="fas fa-envelope"></i></a>
             <a href="#" class="arc-item" id="arcPricingBtn"><i class="fas fa-tag"></i></a>
@@ -248,6 +220,34 @@
     <div class="view-body">
           <!-- ===== TOOLS & SOFTWARE SECTION ===== -->
     <section id="tools">
+           <section id="about">
+  <div class="container">
+    <h2 class="section-title">
+      About Me
+      <button class="listen-btn" onclick="speak(this, document.getElementById('about-text').innerText)">
+        🔊 Listen
+      </button>
+    </h2>
+    <div class="about-content">
+      <div class="about-text">
+        <h3>Designing with Purpose</h3>
+        <div id="about-text">
+          <p>I'm a creative designer focused on building clean, impactful visual experiences. From graphic design to interactive web interfaces, I'm constantly refining my skills and exploring new ways to bring ideas to life.</p>
+          <p>I believe great design should be clear, functional, and engaging. Whether creating brand visuals, digital content, or responsive web experiences, my goal is to craft work that communicates effectively and leaves a lasting impression.</p>
+        </div>
+        <div class="skills">
+          <span class="skill">Brand Identity</span>
+          <span class="skill">Digital Illustration</span>
+          <span class="skill">Typography</span>
+          <span class="skill">Print Design</span>
+        </div>
+      </div>
+      <div class="about-image">
+        <img src="pic47.jpg" alt="Felix James">
+      </div>
+    </div>
+  </div>
+</section>
         <div class="container">
             <h2 class="section-title">Tools & Software</h2>
             <p class="tools-intro">The software I use daily to bring ideas to life — from brand identities to web interfaces. Proficiency is honest, not inflated.</p>
@@ -437,6 +437,8 @@
             </div>
 
         </div>
+
+        
     </section>
     <!-- ===== END TOOLS SECTION ===== -->
 
@@ -473,7 +475,7 @@
                         <li><i class="fas fa-check-circle"></i> Print & digital files</li>
                         <li><i class="fas fa-check-circle"></i> WhatsApp support</li>
                     </ul>
-                    <a href="https://wa.me/254106723905?text=Hi%20Felix%2C%20I%27m%20interested%20in%20the%20Basic%20package%20(KES%201%2C000).%20Can%20we%20talk%3F" target="_blank" class="pricing-cta">Get Started</a>
+                    <a href="commission.html" class="pricing-cta">Get Started</a>
                 </div>
 
                 <!-- Standard — featured -->
@@ -490,7 +492,7 @@
                         <li><i class="fas fa-check-circle"></i> Print & digital files</li>
                         <li><i class="fas fa-check-circle"></i> Priority WhatsApp support</li>
                     </ul>
-                    <a href="https://wa.me/254106723905?text=Hi%20Felix%2C%20I%27m%20interested%20in%20the%20Standard%20package%20(KES%203%2C000).%20Can%20we%20talk%3F" target="_blank" class="pricing-cta">Get Started</a>
+                    <a href="commission.html" class="pricing-cta">Get Started</a>
                 </div>
 
                 <!-- Premium -->
@@ -506,7 +508,7 @@
                         <li><i class="fas fa-check-circle"></i> All file formats included</li>
                         <li><i class="fas fa-check-circle"></i> Dedicated support</li>
                     </ul>
-                    <a href="https://wa.me/254106723905?text=Hi%20Felix%2C%20I%27m%20interested%20in%20the%20Premium%20package%20(KES%208%2C000).%20Can%20we%20talk%3F" target="_blank" class="pricing-cta">Get Started</a>
+                    <a href="commission.html" class="pricing-cta">Get Started</a>
                 </div>
 
             </div>
@@ -573,7 +575,7 @@
         <h2 class="view-title">Tools & Software</h2>
     </div>
     <div class="view-body">
-        <!-- paste your entire tools section content here (everything inside the tools section div) -->
+          
     </div>
 </div>
 <!-- Status floating button -->
@@ -582,6 +584,8 @@
 </a>
 
 <!-- To this -->
-<script type="module" src="script.js"></script>
+<script type="module" src="script.js">
+    navigator.serviceWorker.register('./sw.js')
+</script>
 </body>
 </html>
