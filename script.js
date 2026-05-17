@@ -612,5 +612,79 @@ document.getElementById('toolsBack')?.addEventListener('click', () => {
     closeView(document.getElementById('toolsView'));
 });
 
+// ========== SEASONAL CARDS ==========
+async function loadSeasonalCards() {
+    const grid = document.getElementById('seasonalGrid');
+    if (!grid) return;
+    try {
+        const snapshot = await getDocs(collection(db, 'seasonCards'));
+        const cards = snapshot.docs
+            .map(doc => doc.data())
+            .filter(c => c.image)
+            .sort((a, b) => (a.order || 0) - (b.order || 0));
+        if (!cards.length) { document.getElementById('seasonal-cards').style.display = 'none'; return; }
+        grid.innerHTML = cards.map(c => `
+            <div class="seasonal-card">
+                <img src="${c.image}" alt="featured">
+                ${c.text ? `<div class="seasonal-card-text">${c.text}</div>` : ''}
+            </div>`).join('');
+    } catch(e) {
+        const sec = document.getElementById('seasonal-cards');
+        if (sec) sec.style.display = 'none';
+    }
+}
+loadSeasonalCards();
 
+// ========== ABOUT ME CARD ==========
+const aboutBackdrop = document.getElementById('aboutBackdrop');
+const aboutMeBtn    = document.getElementById('aboutMeBtn');
+const aboutClose    = document.getElementById('aboutClose');
 
+aboutMeBtn?.addEventListener('click', () => {
+    aboutBackdrop.classList.add('open');
+    document.body.style.overflow = 'hidden';
+});
+aboutClose?.addEventListener('click', () => {
+    aboutBackdrop.classList.remove('open');
+    document.body.style.overflow = '';
+});
+aboutBackdrop?.addEventListener('click', (e) => {
+    if (e.target === aboutBackdrop) {
+        aboutBackdrop.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+});
+
+// ========== SERVICE WORKER ==========
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js')
+        .then(() => console.log('SW registered'))
+        .catch(err => console.log('SW failed:', err));
+}
+
+// ========== INIT ==========
+loadTestimonials();
+// ========== FCM PUSH NOTIFICATIONS ==========
+importScripts('https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging-compat.js');
+
+firebase.initializeApp({
+    authDomain: "felix-portfolio-8b3a8.firebaseapp.com",
+    projectId: "felix-portfolio-8b3a8",
+    storageBucket: "felix-portfolio-8b3a8.firebasestorage.app",
+    messagingSenderId: "439075265698",
+    appId: "1:439075265698:web:058c014a4f4c32a9444bfb"
+});
+
+const messaging = firebase.messaging();
+
+messaging.onBackgroundMessage(payload => {
+    const { title, body, icon } = payload.notification;
+    self.registration.showNotification(title, {
+        body:  body  || '',
+        icon:  icon  || '/test/icon-192.png',
+        badge: '/test/icon-192.png'
+    });
+});
+
+navigator.serviceWorker.register('./sw.js')
