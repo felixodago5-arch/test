@@ -442,12 +442,12 @@ searchBack?.addEventListener('click', () => {
     closeView(searchView);
     searchInput.value = '';
     searchClear.classList.remove('visible');
-    searchSuggestions.innerHTML = '';
+    renderSuggestions('');
 });
 openSearch?.addEventListener('click', () => {
     openView(searchView);
-    searchSuggestions.innerHTML = '';
     setTimeout(() => searchInput.focus(), 300);
+    renderSuggestions('');
 });
 
 function getGalleryFiltered() {
@@ -655,4 +655,12 @@ aboutBackdrop?.addEventListener('click', (e) => {
     }
 });
 
+// ========== SERVICE WORKER ==========
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js')
+        .then(() => console.log('SW registered'))
+        .catch(err => console.log('SW failed:', err));
+}
 
+// ========== INIT ==========
+loadTestimonials();
