@@ -656,5 +656,3 @@ aboutBackdrop?.addEventListener('click', (e) => {
 });
 
 
-
-navigator.serviceWorker.register('./sw.js')
