@@ -239,7 +239,11 @@
         .shape-2 { width: 180px; height: 180px; bottom: 20%; right: 30%; opacity: 0.4; }
         .shape-3 { width: 120px; height: 120px; top: 50%; left: 10%; opacity: 0.3; }
 
-        #about { background-color: var(--section-bg); }
+        #about { background-color: var(--section-bg); 
+border-radius: 10px;
+border: 1px solid var(--border-color);
+box-shadow:0 20px 40px rgba(0,0,0,0.3);
+}
 
         .section-title {
             font-size: 2.5rem;
