@@ -587,5 +587,53 @@
 <script type="module" src="script.js">
     navigator.serviceWorker.register('./sw.js')
 </script>
+  <script>
+   let deferredPrompt;
+const installBtn = document.getElementById("installBtn");
+
+// Hide the button initially
+installBtn.style.display = "none";
+
+// Listen for the install event
+window.addEventListener("beforeinstallprompt", (e) => {
+    // Prevent the browser's mini-infobar
+    e.preventDefault();
+
+    // Save the event for later
+    deferredPrompt = e;
+
+    // Show your install button
+    installBtn.style.display = "block";
+});
+
+// User clicks Install
+installBtn.addEventListener("click", async () => {
+    if (!deferredPrompt) return;
+
+    // Show the install prompt
+    deferredPrompt.prompt();
+
+    // Wait for the user's choice
+    const { outcome } = await deferredPrompt.userChoice;
+
+    if (outcome === "accepted") {
+        console.log("User installed the app");
+    } else {
+        console.log("User dismissed the install");
+    }
+
+    // Clear the saved prompt
+    deferredPrompt = null;
+
+    // Hide the button
+    installBtn.style.display = "none";
+});
+
+// Hide the button if the app gets installed
+window.addEventListener("appinstalled", () => {
+    console.log("PWA installed successfully!");
+    installBtn.style.display = "none";
+}); 
+  </script>
 </body>
 </html>
