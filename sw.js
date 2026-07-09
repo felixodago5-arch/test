@@ -1,5 +1,5 @@
 // ========== SERVICE WORKER ==========
-const CACHE_NAME = 'felixcreative-v1.1.0';
+const CACHE_NAME = 'felixcreative-v2.0.0';
 
 self.addEventListener('install', () => self.skipWaiting());
 
