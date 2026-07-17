@@ -594,6 +594,7 @@
 <!-- To this -->
 <script type="module" src="script.js">
     navigator.serviceWorker.register('./sw.js')
+navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' });
 </script>
   <script>
    let deferredPrompt;
