@@ -664,3 +664,65 @@ if ('serviceWorker' in navigator) {
 
 // ========== INIT ==========
 loadTestimonials();
+// ========== BOTTOM NAV ==========
+const bnItems = document.querySelectorAll('.bn-item');
+
+function setActiveNav(target) {
+    bnItems.forEach(b => b.classList.toggle('active', b.dataset.target === target));
+}
+
+bnItems.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const target = btn.dataset.target;
+        switch (target) {
+            case 'home':
+                closeView(galleryView); closeView(searchView); closeView(document.getElementById('toolsView'));
+                document.querySelector('#home').scrollIntoView({ behavior: 'smooth' });
+                break;
+            case 'search':
+                openView(searchView);
+                setTimeout(() => searchInput.focus(), 300);
+                renderSuggestions('');
+                break;
+            case 'design':
+                openView(galleryView);
+                renderGalleryView();
+                break;
+            case 'tools':
+                openView(document.getElementById('toolsView'));
+                break;
+            case 'contact':
+                closeView(galleryView); closeView(searchView); closeView(document.getElementById('toolsView'));
+                document.querySelector('#contact').scrollIntoView({ behavior: 'smooth' });
+                break;
+        }
+        setActiveNav(target);
+    });
+});
+
+// Keep "home" active state in sync if user closes a view manually via its back button
+[galleryView, searchView, document.getElementById('toolsView')].forEach(view => {
+    const backBtn = view.querySelector('.view-back');
+    backBtn?.addEventListener('click', () => setActiveNav('home'));
+});
+// ========== WATER-DROP TAP EFFECT ==========
+bnItems.forEach(btn => {
+    btn.addEventListener('pointerdown', (e) => {
+        const rect = btn.getBoundingClientRect();
+        const x = e.clientX ?? (rect.left + rect.width / 2);
+        const y = e.clientY ?? (rect.top + rect.height / 2);
+        btn.style.setProperty('--rx', `${x - rect.left}px`);
+        btn.style.setProperty('--ry', `${y - rect.top}px`);
+
+        const drop = document.createElement('span');
+        drop.className = 'bn-ripple';
+        btn.appendChild(drop);
+        drop.addEventListener('animationend', () => drop.remove());
+
+        btn.classList.remove('bn-pop');
+        void btn.offsetWidth; // restart animation if tapped rapidly
+        btn.classList.add('bn-pop');
+        btn.addEventListener('animationend', () => btn.classList.remove('bn-pop'), { once: true });
+    });
+});
+
