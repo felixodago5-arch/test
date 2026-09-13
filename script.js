@@ -635,25 +635,6 @@ async function loadSeasonalCards() {
 }
 loadSeasonalCards();
 
-// ========== ABOUT ME CARD ==========
-const aboutBackdrop = document.getElementById('aboutBackdrop');
-const aboutMeBtn    = document.getElementById('aboutMeBtn');
-const aboutClose    = document.getElementById('aboutClose');
-
-aboutMeBtn?.addEventListener('click', () => {
-    aboutBackdrop.classList.add('open');
-    document.body.style.overflow = 'hidden';
-});
-aboutClose?.addEventListener('click', () => {
-    aboutBackdrop.classList.remove('open');
-    document.body.style.overflow = '';
-});
-aboutBackdrop?.addEventListener('click', (e) => {
-    if (e.target === aboutBackdrop) {
-        aboutBackdrop.classList.remove('open');
-        document.body.style.overflow = '';
-    }
-});
 
 // ========== SERVICE WORKER ==========
 if ('serviceWorker' in navigator) {
