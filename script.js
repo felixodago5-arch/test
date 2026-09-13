@@ -612,29 +612,6 @@ document.getElementById('toolsBack')?.addEventListener('click', () => {
     closeView(document.getElementById('toolsView'));
 });
 
-// ========== SEASONAL CARDS ==========
-async function loadSeasonalCards() {
-    const grid = document.getElementById('seasonalGrid');
-    if (!grid) return;
-    try {
-        const snapshot = await getDocs(collection(db, 'seasonCards'));
-        const cards = snapshot.docs
-            .map(doc => doc.data())
-            .filter(c => c.image)
-            .sort((a, b) => (a.order || 0) - (b.order || 0));
-        if (!cards.length) { document.getElementById('seasonal-cards').style.display = 'none'; return; }
-        grid.innerHTML = cards.map(c => `
-            <div class="seasonal-card">
-                <img src="${c.image}" alt="featured">
-                ${c.text ? `<div class="seasonal-card-text">${c.text}</div>` : ''}
-            </div>`).join('');
-    } catch(e) {
-        const sec = document.getElementById('seasonal-cards');
-        if (sec) sec.style.display = 'none';
-    }
-}
-loadSeasonalCards();
-
 
 // ========== SERVICE WORKER ==========
 if ('serviceWorker' in navigator) {
