@@ -21,7 +21,6 @@ This isn't just a static portfolio — it's a working business tool. Visitors br
 
 - **Frontend:** HTML/CSS/JavaScript (PWA)
 - **Backend/Data:** Firebase (Firestore, Authentication)
-- **Payments:** M-Pesa (Daraja API)
 - **Hosting:** GitHub Pages / Firebase Hosting
 - **Notifications:** OneSignal (push notifications)
 
