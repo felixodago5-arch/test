@@ -2106,3 +2106,14 @@ body nav.bottom-nav .bn-indent {
 @media (prefers-reduced-motion: reduce) {
     body nav.bottom-nav .bn-indent { animation: none; opacity: 0; }
 }
+#arcFab {
+    position: fixed;
+    right: 20px;
+    bottom: 100px; /* clear of bottom-nav bar */
+}
+@media (min-width: 1024px) {
+    #arcFab,
+    #bottomNav {
+        display: none;
+    }
+}
