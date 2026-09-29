@@ -143,8 +143,8 @@ async function loadTestimonials() {
         if (!testimonials.length) throw new Error();
     } catch(e) {
         testimonials = [
-            { name: "Jecinter", company: "house essentials ✨️", text: "I'm really happy with the project delivered...", rating: 5 },
-            { name: "George",   company: "Nyakwere furnitures",  text: "timely delivery 👏 with mockups...", rating: 5 }
+            { name: "Jecinter", company: "house essentials ✨️", text: "You are currently offline", rating: 5 },
+            { name: "George",   company: "Nyakwere furnitures",  text: "You are currently offline", rating: 5 }
         ];
     }
     buildSlides();
@@ -360,7 +360,7 @@ function renderGallery() {
     pinGrid.innerHTML = '';
     const filtered = getFiltered();
     if (!filtered.length) {
-        pinGrid.innerHTML = '<div class="pin-empty"><i class="fas fa-search"></i><p>No projects in this category yet.</p></div>';
+        pinGrid.innerHTML = '<div class="pin-empty"><i class="fas fa-search"></i><p>Oops your offline.</p></div>';
         galleryCount.textContent = '0 projects';
         return;
     }
