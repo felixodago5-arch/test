@@ -19,6 +19,63 @@ document.documentElement.setAttribute('data-theme', savedTheme);
 window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', e => {
     document.documentElement.setAttribute('data-theme', e.matches ? 'light' : 'dark');
 });
+// ========== HISTORY / BACK BUTTON ==========
+// Every overlay (views, pricing modal, lightbox) = one history entry,
+// so Back closes it instead of leaving the app.
+const overlayStack = [];          // open overlays, bottom → top
+let backPending = false;
+const NAV_FOR  = { galleryView: 'design', searchView: 'search', toolsView: 'tools' };
+const VIEW_FOR = { design: 'galleryView', search: 'searchView', tools: 'toolsView' };
+
+history.replaceState({ depth: 0 }, '');
+
+function pushOverlay(key) {
+    if (overlayStack.includes(key)) return;
+    overlayStack.push(key);
+    history.pushState({ depth: overlayStack.length }, '');
+    syncNav();
+}
+
+function hideOverlay(key) {
+    if (key === 'lightbox') closeLightbox();
+    else if (key === 'pricing') closePricing();
+    else closeView(document.getElementById(key));
+}
+
+function syncScrollLock() {
+    document.body.style.overflow = overlayStack.length ? 'hidden' : '';
+}
+
+function syncNav() {
+    const top = [...overlayStack].reverse().find(k => NAV_FOR[k]);
+    setActiveNav(top ? NAV_FOR[top] : 'home');
+}
+
+function goBack() {
+    if (!overlayStack.length || backPending) return;
+    backPending = true;
+    history.back();
+}
+
+window.addEventListener('popstate', (e) => {
+    backPending = false;
+    const depth = e.state?.depth ?? 0;
+    while (overlayStack.length > depth) hideOverlay(overlayStack.pop());
+    syncScrollLock();
+    syncNav();
+});
+
+function closeAllOverlays() {
+    const n = overlayStack.length;
+    if (!n) return Promise.resolve();
+    while (overlayStack.length) hideOverlay(overlayStack.pop());
+    syncScrollLock();
+    return new Promise(resolve => {
+        window.addEventListener('popstate', resolve, { once: true });
+        setTimeout(resolve, 400);   // safety net
+        history.go(-n);
+    });
+}
 
 // ========== PRICING MODAL ==========
 const pricingBackdrop = document.getElementById('pricingBackdrop');
@@ -143,149 +200,15 @@ async function loadTestimonials() {
         if (!testimonials.length) throw new Error();
     } catch(e) {
         testimonials = [
-            { name: "Jecinter", company: "house essentials ✨️", text: "You are currently offline", rating: 5 },
-            { name: "George",   company: "Nyakwere furnitures",  text: "You are currently offline", rating: 5 }
+            { name: "Jecinter", company: "house essentials ✨️", text: "I'm really happy with the project delivered...", rating: 5 },
+            { name: "George",   company: "Nyakwere furnitures",  text: "timely delivery 👏 with mockups...", rating: 5 }
         ];
     }
     buildSlides();
     startAutoPlay();
 }
 
-// ========== FLOATING ARC MENU ==========
-const arcFab     = document.getElementById('arcFab');
-const arcMainBtn = document.getElementById('arcMainBtn');
-const arcIconEl  = document.getElementById('arcIcon');
-let arcOpen = false;
-const ARC_RADIUS = 92;
-const arcItemEls = document.querySelectorAll('.arc-item');
 
-function getArcAngles() {
-    const rect = arcFab.getBoundingClientRect();
-    const cx = rect.left + rect.width / 2;
-    const cy = rect.top  + rect.height / 2;
-    const vw = window.innerWidth, vh = window.innerHeight;
-    const onRight  = cx > vw / 2;
-    const onBottom = cy > vh / 2;
-    if (onBottom && onRight)  return { start: -180, end: -90 };
-    if (onBottom && !onRight) return { start: -90,  end: 0   };
-    if (!onBottom && onRight) return { start: 90,   end: 180 };
-    return                           { start: 0,    end: 90  };
-}
-
-function positionArcItems() {
-    const { start, end } = getArcAngles();
-    arcItemEls.forEach((item, idx) => {
-        const t     = idx / (arcItemEls.length - 1);
-        const angle = start + t * (end - start);
-        const rad   = angle * Math.PI / 180;
-        const dx    = Math.cos(rad) * ARC_RADIUS;
-        const dy    = Math.sin(rad) * ARC_RADIUS;
-        item.setAttribute('data-dx', dx);
-        item.setAttribute('data-dy', dy);
-        const scale = arcOpen ? 1 : 0.5;
-        item.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(${scale})`;
-    });
-}
-
-function toggleArc(e) {
-    if (e && e.stopPropagation) e.stopPropagation();
-    arcOpen = !arcOpen;
-    arcFab.classList.toggle('expanded', arcOpen);
-    arcIconEl.className = arcOpen ? 'fas fa-times' : 'fas fa-plus';
-    positionArcItems();
-}
-
-arcItemEls.forEach(item => {
-    item.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const targetId = item.getAttribute('href');
-        if (targetId && targetId !== '#') {
-            const targetEl = document.querySelector(targetId);
-            if (targetEl) window.scrollTo({ top: targetEl.offsetTop - 70, behavior: 'smooth' });
-        }
-        if (arcOpen) toggleArc(e);
-    });
-});
-
-document.addEventListener('pointerdown', (e) => {
-    if (arcOpen && !arcFab.contains(e.target)) {
-        arcOpen = false;
-        arcFab.classList.remove('expanded');
-        arcIconEl.className = 'fas fa-plus';
-        positionArcItems();
-    }
-});
-
-let dragActive = false, dragMoved = false;
-let dragStartX, dragStartY, dragStartLeft, dragStartTop;
-
-function setArcPos(left, top) {
-    arcFab.style.left = left + 'px'; arcFab.style.top = top + 'px';
-    arcFab.style.right = 'auto'; arcFab.style.bottom = 'auto';
-}
-
-function snapToEdges(left, top, vw, vh, w, h) {
-    let newLeft = (left + w / 2 < vw / 2) ? 12 : vw - w - 12;
-    let newTop  = (top  + h / 2 < vh / 2) ? 12 : vh - h - 12;
-    return {
-        left: Math.min(Math.max(newLeft, 8), vw - w - 8),
-        top:  Math.min(Math.max(newTop,  8), vh - h - 8)
-    };
-}
-
-function onDragStart(e) {
-    if (e.target.closest('.arc-item') && arcOpen) return;
-    e.preventDefault();
-    dragActive = true; dragMoved = false;
-    const clientX = e.clientX ?? e.touches?.[0].clientX ?? 0;
-    const clientY = e.clientY ?? e.touches?.[0].clientY ?? 0;
-    dragStartX = clientX; dragStartY = clientY;
-    const rect = arcFab.getBoundingClientRect();
-    dragStartLeft = rect.left; dragStartTop = rect.top;
-    setArcPos(dragStartLeft, dragStartTop);
-}
-
-function onDragMove(e) {
-    if (!dragActive) return;
-    const clientX = e.clientX ?? e.touches?.[0].clientX ?? 0;
-    const clientY = e.clientY ?? e.touches?.[0].clientY ?? 0;
-    if (Math.abs(clientX - dragStartX) > 8 || Math.abs(clientY - dragStartY) > 8) {
-        dragMoved = true;
-        e.preventDefault();
-        const vw = window.innerWidth, vh = window.innerHeight;
-        const w  = arcFab.offsetWidth,  h = arcFab.offsetHeight;
-        setArcPos(
-            Math.min(Math.max(dragStartLeft + (clientX - dragStartX), 5), vw - w - 5),
-            Math.min(Math.max(dragStartTop  + (clientY - dragStartY), 5), vh - h - 5)
-        );
-    }
-}
-
-function onDragEnd(e) {
-    if (!dragActive) return;
-    dragActive = false;
-    if (!dragMoved) { toggleArc(e); return; }
-    const rect = arcFab.getBoundingClientRect();
-    const vw = window.innerWidth, vh = window.innerHeight;
-    const snapped = snapToEdges(rect.left, rect.top, vw, vh, arcFab.offsetWidth, arcFab.offsetHeight);
-    setArcPos(snapped.left, snapped.top);
-    if (arcOpen) positionArcItems();
-}
-
-arcMainBtn.addEventListener('mousedown', onDragStart);
-window.addEventListener('mousemove', onDragMove);
-window.addEventListener('mouseup', onDragEnd);
-arcMainBtn.addEventListener('touchstart', onDragStart, { passive: false });
-window.addEventListener('touchmove', onDragMove, { passive: false });
-window.addEventListener('touchend', onDragEnd);
-window.addEventListener('resize', () => {
-    const rect = arcFab.getBoundingClientRect();
-    const snapped = snapToEdges(rect.left, rect.top, window.innerWidth, window.innerHeight, arcFab.offsetWidth, arcFab.offsetHeight);
-    setArcPos(snapped.left, snapped.top);
-    positionArcItems();
-});
-positionArcItems();
 
 // ========== SIMPLE LIGHTBOX ==========
 const lightbox = document.createElement('div');
@@ -360,7 +283,7 @@ function renderGallery() {
     pinGrid.innerHTML = '';
     const filtered = getFiltered();
     if (!filtered.length) {
-        pinGrid.innerHTML = '<div class="pin-empty"><i class="fas fa-search"></i><p>Oops your offline.</p></div>';
+        pinGrid.innerHTML = '<div class="pin-empty"><i class="fas fa-search"></i><p>No projects in this category yet.</p></div>';
         galleryCount.textContent = '0 projects';
         return;
     }
@@ -381,7 +304,83 @@ filterBtns.forEach(btn => {
         renderGallery();
     });
 });
+// ========== HERO MEDIA STAGE ==========
+let HERO_MEDIA = [];
+const heroMediaTrack = document.getElementById('heroMediaTrack');
+const heroMediaDots  = document.getElementById('heroMediaDots');
 
+async function loadHeroMedia() {
+    try {
+        const snapshot = await getDocs(collection(db, 'heroMedia'));
+        HERO_MEDIA = snapshot.docs.map(doc => doc.data()).filter(m => m.url);
+        if (!HERO_MEDIA.length) throw new Error();
+    } catch (e) {
+        HERO_MEDIA = [];
+    }
+    buildHeroMedia();
+}
+
+function buildHeroMedia() {
+    if (!HERO_MEDIA.length) {
+        heroMediaTrack.innerHTML = '<div class="hero-media-placeholder"><i class="fas fa-photo-video"></i></div>';
+        heroMediaDots.innerHTML = '';
+        return;
+    }
+    heroMediaTrack.innerHTML = HERO_MEDIA.map(m =>
+        m.type === 'video'
+            ? `<div class="hero-media-slide"><video src="${m.url}" muted playsinline loop autoplay></video></div>`
+            : `<div class="hero-media-slide"><img src="${m.url}" alt=""></div>`
+    ).join('');
+
+    heroMediaDots.innerHTML = '';
+    HERO_MEDIA.forEach((_, i) => {
+        const dot = document.createElement('div');
+        dot.className = 'dot' + (i === 0 ? ' active' : '');
+        dot.addEventListener('click', () => {
+            heroMediaTrack.children[i].scrollIntoView({ behavior: 'smooth', inline: 'start' });
+        });
+        heroMediaDots.appendChild(dot);
+    });
+}
+
+heroMediaTrack?.addEventListener('scroll', () => {
+    const idx = Math.round(heroMediaTrack.scrollLeft / heroMediaTrack.clientWidth);
+    heroMediaDots.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+});
+
+loadHeroMedia();
+
+// ========== RECENT PROJECTS (horizontal, no CTA) ==========
+const recentProjectsTrack = document.getElementById('recentProjectsTrack');
+
+function renderRecentProjects() {
+    if (!recentProjectsTrack) return;
+    const recent = DESIGNS.slice(0, 8);
+    if (!recent.length) {
+        recentProjectsTrack.innerHTML = '<div class="recent-project-placeholder"><i class="fas fa-folder-open"></i></div>';
+        return;
+    }
+    recentProjectsTrack.innerHTML = recent.map(d => `
+        <div class="recent-project-card" data-id="${d.id}">
+            <div class="recent-project-image">
+                ${d.image
+                    ? `<img src="${d.image}" alt="${d.title || ''}">`
+                    : `<div class="recent-project-img-placeholder"><i class="fas ${d.icon || 'fa-image'}"></i></div>`}
+            </div>
+            <div class="recent-project-info">
+                <p class="recent-project-title">${d.title || ''}</p>
+                <p class="recent-project-desc">${d.description || ''}</p>
+            </div>
+        </div>
+    `).join('');
+
+    recentProjectsTrack.querySelectorAll('.recent-project-card').forEach(card => {
+        card.addEventListener('click', () => {
+            const design = DESIGNS.find(d => d.id === card.dataset.id);
+            if (design?.image) openLightbox(design.image);
+        });
+    });
+}
 // ========== TOOLS BAR ANIMATION ==========
 const toolCards = document.querySelectorAll('.tool-card[data-pct]');
 toolCards.forEach(card => {
@@ -428,20 +427,39 @@ const PAGE_SIZE = 8;
 let galleryFilter = 'all';
 let galleryPage   = 0;
 
-function openView(view) { view.classList.add('active'); document.body.style.overflow = 'hidden'; }
-function closeView(view) { view.classList.remove('active'); document.body.style.overflow = ''; }
+function openView(view, historyKey = null) {
+    if (!view) return;
+
+    view.classList.add('active');
+    document.body.style.overflow = 'hidden';
+
+    if (historyKey) {
+        pushOverlay(historyKey);
+    }
+}
+
+function closeView(view) {
+    if (!view) return;
+
+    view.classList.remove('active');
+    document.body.style.overflow = '';
+}
 
 arcGalleryBtn?.addEventListener('click', (e) => {
-    e.preventDefault(); e.stopPropagation();
+    e.preventDefault();
+    e.stopPropagation();
+
     if (arcOpen) toggleArc(e);
-    setTimeout(() => { openView(galleryView); renderGalleryView(); }, 150);
+
+    setTimeout(() => {
+        openView(galleryView, 'galleryView');
+        renderGalleryView();
+    }, 150);
 });
 
-galleryBack?.addEventListener('click', () => closeView(galleryView));
-searchBack?.addEventListener('click', () => {
-    closeView(searchView);
-    searchInput.value = '';
-    searchClear.classList.remove('visible');
+openSearch?.addEventListener('click', () => {
+    openView(searchView, 'searchView');
+    setTimeout(() => searchInput.focus(), 300);
     renderSuggestions('');
 });
 openSearch?.addEventListener('click', () => {
@@ -605,7 +623,7 @@ document.getElementById('viewAllBtn')?.addEventListener('click', () => {
 });
 
 document.getElementById('viewToolsBtn')?.addEventListener('click', () => {
-    openView(document.getElementById('toolsView'));
+    openView(document.getElementById('toolsView'), 'toolsView');
 });
 
 document.getElementById('toolsBack')?.addEventListener('click', () => {
@@ -632,28 +650,68 @@ function setActiveNav(target) {
 bnItems.forEach(btn => {
     btn.addEventListener('click', () => {
         const target = btn.dataset.target;
-        switch (target) {
-            case 'home':
-                closeView(galleryView); closeView(searchView); closeView(document.getElementById('toolsView'));
-                document.querySelector('#home').scrollIntoView({ behavior: 'smooth' });
-                break;
-            case 'search':
-                openView(searchView);
-                setTimeout(() => searchInput.focus(), 300);
-                renderSuggestions('');
-                break;
-            case 'design':
-                openView(galleryView);
-                renderGalleryView();
-                break;
-            case 'tools':
-                openView(document.getElementById('toolsView'));
-                break;
-            case 'contact':
-                closeView(galleryView); closeView(searchView); closeView(document.getElementById('toolsView'));
-                document.querySelector('#contact').scrollIntoView({ behavior: 'smooth' });
-                break;
-        }
+switch (target) {
+
+    case 'home':
+        closeView(galleryView);
+        closeView(searchView);
+        closeView(document.getElementById('toolsView'));
+
+        document.querySelector('#home')
+            .scrollIntoView({ behavior: 'smooth' });
+
+        setActiveNav('home');
+        break;
+
+
+    case 'search':
+        closeView(galleryView);
+        closeView(document.getElementById('toolsView'));
+
+        openView(searchView, 'searchView');
+
+        setTimeout(() => searchInput.focus(), 300);
+        renderSuggestions('');
+
+        setActiveNav('search');
+        break;
+
+
+    case 'design':
+        closeView(searchView);
+        closeView(document.getElementById('toolsView'));
+
+        openView(galleryView, 'galleryView');
+        renderGalleryView();
+
+        setActiveNav('design');
+        break;
+
+
+    case 'tools':
+        closeView(galleryView);
+        closeView(searchView);
+
+        openView(
+            document.getElementById('toolsView'),
+            'toolsView'
+        );
+
+        setActiveNav('tools');
+        break;
+
+
+    case 'contact':
+        closeView(galleryView);
+        closeView(searchView);
+        closeView(document.getElementById('toolsView'));
+
+        document.querySelector('#contact')
+            .scrollIntoView({ behavior: 'smooth' });
+
+        setActiveNav('contact');
+        break;
+}
         setActiveNav(target);
     });
 });
