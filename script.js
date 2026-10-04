@@ -688,17 +688,14 @@ switch (target) {
         break;
 
 
-    case 'tools':
-        closeView(galleryView);
-        closeView(searchView);
+   case 'pricingBackdrop':
+    closeView(galleryView);
+    closeView(searchView);
+    closeView(document.getElementById('toolsView'));
+    document.getElementById('pricingBackdrop').classList.add('open');
 
-        openView(
-            document.getElementById('toolsView'),
-            'toolsView'
-        );
-
-        setActiveNav('tools');
-        break;
+    setActiveNav('pricingBackdrop');
+    break;
 
 
     case 'contact':
