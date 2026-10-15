@@ -304,7 +304,7 @@ filterBtns.forEach(btn => {
         renderGallery();
     });
 });
-// ========== HERO MEDIA STAGE ==========
+/*// ========== HERO MEDIA STAGE ==========
 let HERO_MEDIA = [];
 const heroMediaTrack = document.getElementById('heroMediaTrack');
 const heroMediaDots  = document.getElementById('heroMediaDots');
@@ -380,7 +380,7 @@ function renderRecentProjects() {
             if (design?.image) openLightbox(design.image);
         });
     });
-}
+}*/
 // ========== TOOLS BAR ANIMATION ==========
 const toolCards = document.querySelectorAll('.tool-card[data-pct]');
 toolCards.forEach(card => {
