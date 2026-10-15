@@ -3,6 +3,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/fireba
 import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
+  apiKey: "AIzaSyAh0JpM0BqgCwxkhFG32m6VH6okQIiSops",
   authDomain: "felix-portfolio-8b3a8.firebaseapp.com",
   projectId: "felix-portfolio-8b3a8",
   storageBucket: "felix-portfolio-8b3a8.firebasestorage.app",
